@@ -21,14 +21,14 @@
 #define CHATCMD_DECL_ST(Name) bool Name##_ChatCommand(cPlayer *Player,const DATokenClass &Text,TextMessageEnum ChatType); \
 	                          DAAccessLevel::Level Name##MinLevel
 
-#define CHATCMD_STNG_MT(Name) Name##MinLevel = (DAAccessLevel::Level)DASettingsManager::Get_Int("Essentials", #Name ## "MinLevel", 0); \
-							  Name##OthersLevel = (DAAccessLevel::Level)DASettingsManager::Get_Int("Essentials", #Name ## "OthersLevel", 0)
+#define CHATCMD_STNG_MT(Name) Name##MinLevel = (DAAccessLevel::Level)DASettingsManager::Get_Int("Essentials", #Name ## "MinLevel", -1); \
+							  Name##OthersLevel = (DAAccessLevel::Level)DASettingsManager::Get_Int("Essentials", #Name ## "OthersLevel", -1)
 
 #define CHATCMD_STNG_ST(Name) Name##MinLevel = (DAAccessLevel::Level)DASettingsManager::Get_Int("Essentials", #Name ## "MinLevel", 0);
 
 #define CHATCMD_DEF(Class, Name) bool Class##::Name##_ChatCommand(cPlayer *Player,const DATokenClass &Text,TextMessageEnum ChatType)
 
-#define CHATCMD_REG(Class, Name, Aliases, Parameters) Register_Chat_Command((DAECC)&Class##::Name##_ChatCommand, Aliases, Parameters, Name##MinLevel, DAChatType::ALL)
+#define CHATCMD_REG(Class, Name, Aliases, Parameters) if (Name##MinLevel >= 0) Register_Chat_Command((DAECC)&Class##::Name##_ChatCommand, Aliases, Parameters, Name##MinLevel, DAChatType::ALL)
 
 #define DECIDE_TARGET(Length, Index) Text.Size() >= Length ? Match_Player(Player, Text[Index], false, true) : Player
 
