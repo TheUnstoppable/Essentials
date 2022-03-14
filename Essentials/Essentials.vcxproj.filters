@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="General.cpp" />
+    <ClCompile Include="EssentialsCommands.cpp">
+      <Filter>Features\Basic Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsPlayerDataClass.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsEventClass.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsBadWordFilter.cpp">
+      <Filter>Features\Bad Word Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsCrateInjector.cpp">
+      <Filter>Features\Crate Injector</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsGruntEffect.cpp">
+      <Filter>Features\Grunt Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsJukebox.cpp">
+      <Filter>Features\Jukebox</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsHolograms.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsMapHolograms.cpp">
+      <Filter>Features\Map Holograms</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="General.h" />
+    <ClInclude Include="EssentialsUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsPlayerDataClass.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsEventClass.h">
+      <Filter>Features</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsBadWordFilter.h">
+      <Filter>Features\Bad Word Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCrateInjector.h">
+      <Filter>Features\Crate Injector</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsGruntEffect.h">
+      <Filter>Features\Grunt Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsJukebox.h">
+      <Filter>Features\Jukebox</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsHolograms.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsMapHolograms.h">
+      <Filter>Features\Map Holograms</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Features">
+      <UniqueIdentifier>{b35e6bda-43b9-4284-8816-94397dc4977d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Basic Commands">
+      <UniqueIdentifier>{0494668c-00d1-4018-acc4-34c00c9f5586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{b81483a3-5125-40ca-be98-debf34aadc88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Bad Word Filter">
+      <UniqueIdentifier>{d3cd0b70-f7cc-43a1-801f-78d0f13bfbb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Crate Injector">
+      <UniqueIdentifier>{a14fd048-4ee1-45aa-b12a-d2db6b09177e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Grunt Effect">
+      <UniqueIdentifier>{6b895335-70af-486e-a7d3-103f51e57868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Jukebox">
+      <UniqueIdentifier>{97e1ae9f-d2e0-4e76-b163-9509371dd6e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API">
+      <UniqueIdentifier>{48df59b5-ae9d-40ae-b93b-d2cc63e56302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Map Holograms">
+      <UniqueIdentifier>{7c0acda1-78d5-4c1b-89b0-61fda5a220d6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Essentials.ini" />
+  </ItemGroup>
+</Project>
