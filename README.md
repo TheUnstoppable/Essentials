@@ -8,6 +8,12 @@ Essentials comes with useful, extremely configurable and easy to use commands, f
 ### Holograms API
 Essentials provides a simple API to create text holograms in maps at custom locations and handles object events for developers. Holograms spawns an invisible soldier and uses it's player name display to create holographic texts in the map.
 
+### Connection Messages
+Essentials can send host messages into the game when someone requests to join server or when loses connection. Essentials also sends extended information about connection requests to Log Server, so bots and loggers can get detailed information about player before they join.
+
+### Anti-Chat Flood
+This feature checks clients for flooding in the same way as radio message spam check.
+
 ### Bad Word Filter
 This feature checks messages sent by players for bad words, then warns players if their messages contained a bad word and optionally kicks after configurable amount of warnings.
 
