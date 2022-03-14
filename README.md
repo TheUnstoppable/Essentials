@@ -21,7 +21,9 @@ This feature plays grunt sound with small camera shake as seen in Single Player.
 This feature utilizes Essentials' Holograms API and creates holograms in maps defined by their map names in configuration.
 
 ### Jukebox
-Essentials comes with a very advanced Jukebox feature, allowing players to create their own playlists that persists between maps with loop modes and shuffling.
+Essentials comes with a very advanced Jukebox feature, allowing players to create their own playlists with loop modes and shuffling.
 
 ## Support
-If you need help or want to suggest a feature/improvement, you will get the fastest response by joining in Discord server at https://discord.gg/KjeQ7xv, but be sure to read `#important` channel first.
+You can find a list of commands and their descriptions at [here](docs/commands.md).  
+<br />
+If you need further help or want to suggest a feature/improvement, you will get the fastest response by joining in Discord server at https://discord.gg/KjeQ7xv, but be sure to read `#important` channel first.
