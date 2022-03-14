@@ -356,7 +356,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	CHATCMD_REG(EssentialsEventClass, GiveMoney, "!givemoney|!money|!gm", 1);
 	CHATCMD_REG(EssentialsEventClass, GoTo, "!goto", 1);
 	CHATCMD_REG(EssentialsEventClass, Put, "!put", 1);
-	CHATCMD_REG(EssentialsEventClass, PutAll, "!putall", 1);
+	CHATCMD_REG(EssentialsEventClass, PutAll, "!putall", 0);
 	CHATCMD_REG(EssentialsEventClass, PutAllLine, "!putallline", 1);
 	CHATCMD_REG(EssentialsEventClass, PutAllCircle, "!putallcircle", 1);
 	CHATCMD_REG(EssentialsEventClass, SetHealth, "!sethealth|!shealth|!sh", 1);
