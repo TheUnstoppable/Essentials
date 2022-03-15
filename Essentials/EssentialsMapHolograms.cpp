@@ -55,7 +55,7 @@ void EssentialsMapHologramsClass::Settings_Loaded_Event() {
 			}
 
 			Holograms->Add(Name);
-			EssentialsHologramsManager::Create_Hologram(Name, Token.Get_Remaining_String(), (EssentialsHologramColor::HologramColor)Color, Position);
+			EssentialsHologramsManager::Create_Hologram(Name, WideStringClass(Token.Get_Remaining_String()), (EssentialsHologramColor::HologramColor)Color, Position);
 		}
 	}
 }

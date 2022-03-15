@@ -74,17 +74,17 @@ const Vector3& EssentialsHologramDataClass::Get_Position() {
 }
 
 void EssentialsHologramDataClass::Set_Hologram_Color(EssentialsHologramColor::HologramColor NewColor) {
-	Color = newColor;
+	Color = NewColor;
 	Reinitialize_Object();
 }
 
 void EssentialsHologramDataClass::Set_Hologram_Text(const wchar_t* NewText) {
-	Text = newText;
+	Text = NewText;
 	Reinitialize_Object();
 }
 
 void EssentialsHologramDataClass::Set_Position(const Vector3& NewPosition) {
-	Position = newPosition;
+	Position = NewPosition;
 	Reinitialize_Object();
 }
 
