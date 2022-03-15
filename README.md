@@ -31,5 +31,6 @@ Essentials comes with a very advanced Jukebox feature, allowing players to creat
 
 ## Support
 You can find a list of commands and their descriptions at [here](docs/commands.md).  
+You can view API documentation at [here](docs/api/index.md).  
 <br />
 If you need further help or want to suggest a feature/improvement, you will get the fastest response by joining in Discord server at https://discord.gg/KjeQ7xv, but be sure to read `#important` channel first.
