@@ -345,6 +345,8 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	Unregister_Chat_Command("!revivebld");
 	Unregister_Chat_Command("!godmode");
 	Unregister_Chat_Command("!screenshot");
+	Unregister_Chat_Command("!getmodelname");
+	Unregister_Chat_Command("!getpresetname");
 	
 	CHATCMD_REG(EssentialsEventClass, Fly, "!fly", 0);
 	CHATCMD_REG(EssentialsEventClass, Spectate, "!spectate|!specmode|!spec", 0);
