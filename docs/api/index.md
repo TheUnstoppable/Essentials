@@ -9,7 +9,7 @@ First you need to clone Essentials into your solution, you can use Git or downlo
 ![image](https://user-images.githubusercontent.com/44943820/158345017-35d4840c-dc1c-44a9-a412-a9b39cf1121e.png)  
 ![image](https://user-images.githubusercontent.com/44943820/158345154-a28dd174-8df7-4804-8901-06f9915ae129.png)  
 <br />
-Then in your IDE (in this case Visual Studio) right click on `References` under your project tree, then click `Add Reference...`.  
+Then in your IDE (in this case Visual Studio) right click on `References` under your plugin's project tree, then click `Add Reference...`.  
 <br />
 ![image](https://user-images.githubusercontent.com/44943820/158338973-3ce21df3-2fcb-430e-8f95-d9dc4439920e.png)  
 <br />
