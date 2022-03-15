@@ -57,7 +57,7 @@ bool EssentialsHologramObjectGameObjObserverClass::Damage_Received_Request(Armed
 	return false;
 }
 
-StringClass EssentialsHologramDataClass::Get_Hologram_Name() {
+const StringClass& EssentialsHologramDataClass::Get_Hologram_Name() {
 	return Name;
 }
 
@@ -65,25 +65,25 @@ EssentialsHologramColor::HologramColor EssentialsHologramDataClass::Get_Hologram
 	return Color;
 }
 
-WideStringClass EssentialsHologramDataClass::Get_Hologram_Text() {
+const WideStringClass& EssentialsHologramDataClass::Get_Hologram_Text() {
 	return Text;
 }
 
-Vector3& EssentialsHologramDataClass::Get_Position() {
+const Vector3& EssentialsHologramDataClass::Get_Position() {
 	return Position;
 }
 
-void EssentialsHologramDataClass::Set_Hologram_Color(EssentialsHologramColor::HologramColor newColor) {
+void EssentialsHologramDataClass::Set_Hologram_Color(EssentialsHologramColor::HologramColor NewColor) {
 	Color = newColor;
 	Reinitialize_Object();
 }
 
-void EssentialsHologramDataClass::Set_Hologram_Text(WideStringClass& newText) {
+void EssentialsHologramDataClass::Set_Hologram_Text(const wchar_t* NewText) {
 	Text = newText;
 	Reinitialize_Object();
 }
 
-void EssentialsHologramDataClass::Set_Position(Vector3& newPosition) {
+void EssentialsHologramDataClass::Set_Position(const Vector3& NewPosition) {
 	Position = newPosition;
 	Reinitialize_Object();
 }
@@ -99,7 +99,11 @@ void EssentialsHologramsManager::Shutdown() {
 	Holograms = 0;
 }
 
-EssentialsHologramDataClass* EssentialsHologramsManager::Create_Hologram(const StringClass& Name, const WideStringClass& Text, const EssentialsHologramColor::HologramColor Color, const Vector3& Position) {
+bool EssentialsHologramsManager::Is_Initialized() {
+	return !!Holograms;
+}
+
+EssentialsHologramDataClass* EssentialsHologramsManager::Create_Hologram(const char* Name, const wchar_t* Text, const EssentialsHologramColor::HologramColor Color, const Vector3& Position) {
 	if (!Holograms) {
 		return 0;
 	}
@@ -116,7 +120,7 @@ EssentialsHologramDataClass* EssentialsHologramsManager::Create_Hologram(const S
 	return Hologram;
 }
 
-EssentialsHologramDataClass* EssentialsHologramsManager::Find_Hologram(const StringClass& Name) {
+EssentialsHologramDataClass* EssentialsHologramsManager::Find_Hologram(const char* Name) {
 	if (!Holograms) {
 		return 0;
 	}
@@ -145,7 +149,7 @@ bool EssentialsHologramsManager::Delete_Hologram(EssentialsHologramDataClass* Ho
 	return false;
 }
 
-bool EssentialsHologramsManager::Delete_Hologram(const StringClass& Name) {
+bool EssentialsHologramsManager::Delete_Hologram(const char* Name) {
 	if (!Holograms) {
 		return false;
 	}

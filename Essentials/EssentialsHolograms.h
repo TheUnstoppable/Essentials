@@ -37,14 +37,14 @@ private:
 	~EssentialsHologramDataClass();
 
 public:
-	StringClass Get_Hologram_Name();
+	const StringClass& Get_Hologram_Name();
 	EssentialsHologramColor::HologramColor Get_Hologram_Color();
-	WideStringClass Get_Hologram_Text();
-	Vector3& Get_Position();
+	const WideStringClass& Get_Hologram_Text();
+	const Vector3& Get_Position();
 
-	void Set_Hologram_Color(EssentialsHologramColor::HologramColor newColor);
-	void Set_Hologram_Text(WideStringClass& newText);
-	void Set_Position(Vector3& newPosition);
+	void Set_Hologram_Color(EssentialsHologramColor::HologramColor NewColor);
+	void Set_Hologram_Text(const wchar_t* NewText);
+	void Set_Position(const Vector3& NewPosition);
 	void Reinitialize_Object();
 
 private:
@@ -62,12 +62,12 @@ class ESSENTIALS_API EssentialsHologramsManager {
 public:
 	static void Init();
 	static void Shutdown();
-	static bool Is_Initialized() { return !!Holograms; }
+	static bool Is_Initialized();
 
-	static EssentialsHologramDataClass* Create_Hologram(const StringClass& Name, const WideStringClass& Text, const EssentialsHologramColor::HologramColor Color, const Vector3& Position);
-	static EssentialsHologramDataClass* Find_Hologram(const StringClass& Name);
+	static EssentialsHologramDataClass* Create_Hologram(const char* Name, const wchar_t* Text, const EssentialsHologramColor::HologramColor Color, const Vector3& Position);
+	static EssentialsHologramDataClass* Find_Hologram(const char* Name);
 	static bool Delete_Hologram(EssentialsHologramDataClass* Hologram);
-	static bool Delete_Hologram(const StringClass& Name);
+	static bool Delete_Hologram(const char* Name);
 
 protected:
 	static void Clear_Holograms();
