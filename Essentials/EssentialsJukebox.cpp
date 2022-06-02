@@ -27,7 +27,6 @@
 EssentialsJukeboxClass* EssentialsJukeboxClass::Instance = 0;
 
 EssentialsJukeboxClass::EssentialsJukeboxClass() {
-	Musics = new DynamicVectorClass<EssentialsJukeboxMusic*>;
 	Instance = this;
 
 	Register_Event(DAEvent::SETTINGSLOADED, INT_MAX);
@@ -45,7 +44,6 @@ EssentialsJukeboxClass::~EssentialsJukeboxClass() {
 	Instance = 0;
 
 	Clear_Musics();
-	delete Musics;
 
 	DALogManager::Write_Log("_ESSENTIALS", "Unloaded Jukebox feature.");
 }
@@ -72,11 +70,11 @@ void EssentialsJukeboxClass::Settings_Loaded_Event() {
 			Music->File = Entry->Entry;
 			Music->Name = Token.Get_Remaining_String();
 			Music->Duration = duration;
-			Musics->Add(Music);
+			Musics.Add_Tail(Music);
 		}
 	}
 
-	if (!Musics->Count()) {
+	if (!Musics.Get_Count()) {
 		Console_Output("[Essentials] No musics were found! Disabling Jukebox feature...\n");
 		delete this;
 		return;
@@ -174,9 +172,9 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			}
 		}
 		else if (Text[1] == "list") {
-			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] All musics (%d in total): ", Musics->Count());
-			for (int i = 0; i < Musics->Count(); ++i) {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] %s (%s)", (*Musics)[i]->Name, EssentialsUtils::Format_Seconds((int)(*Musics)[i]->Duration));
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] All musics (%d in total): ", Musics.Get_Count());
+			for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
+				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] %s (%s)", Node->Data()->Name, EssentialsUtils::Format_Seconds((int)Node->Data()->Duration));
 			}
 		}
 		else if (Text[1] == "next") {
@@ -311,11 +309,11 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 }
 
 void EssentialsJukeboxClass::Clear_Musics() {
-	for(int i = 0; i < Musics->Count(); ++i) {
-		delete (*Musics)[i];
+	for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
+		delete Node->Data();
 	}
 
-	Musics->Delete_All();
+	Musics.Remove_All();
 }
 
 void EssentialsJukeboxClass::Reset_Playlists() {
@@ -336,8 +334,8 @@ void EssentialsJukeboxClass::Add_All_Musics(cPlayer* Player) {
 	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
 		bool isStopped = Data->Get_IsStopped();
 		Data->Set_IsStopped(false);
-		for(int i = 0; i < Musics->Count(); ++i) {
-			Data->Add_Music((*Musics)[i]);
+		for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
+			Data->Add_Music(Node->Data());
 		}
 		if (ShuffleInitially) {
 			Data->Shuffle_List();
@@ -384,10 +382,9 @@ bool EssentialsJukeboxClass::Is_Music_Playing(cPlayer* Player) {
 
 int EssentialsJukeboxClass::Find_Music(StringClass Name, EssentialsJukeboxMusic*& Music) {
 	int found = 0;
-	for(int i = 0; i < Musics->Count(); ++i) {
-		EssentialsJukeboxMusic* mus = (*Musics)[i];
-		if (stristr(mus->Name, Name)) {
-			Music = mus;
+	for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
+		if (stristr(Node->Data()->Name, Name)) {
+			Music = Node->Data();
 			found++;
 		}
 	}

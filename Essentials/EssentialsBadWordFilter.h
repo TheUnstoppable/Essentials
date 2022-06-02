@@ -25,5 +25,5 @@ private:
 	bool ReplaceSpaces;
 	StringClass WarnMessage;
 	StringClass KickMessage;
-	DynamicVectorClass<StringClass>* BadWords;
+	DynamicVectorClass<StringClass> BadWords;
 };

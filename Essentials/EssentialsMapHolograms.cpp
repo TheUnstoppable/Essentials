@@ -21,7 +21,6 @@
 EssentialsMapHologramsClass* EssentialsMapHologramsClass::Instance = 0;
 
 EssentialsMapHologramsClass::EssentialsMapHologramsClass() {
-	Holograms = new DynamicVectorClass<StringClass>;
 	Instance = this;
 
 	Register_Event(DAEvent::SETTINGSLOADED);
@@ -33,7 +32,6 @@ EssentialsMapHologramsClass::~EssentialsMapHologramsClass() {
 	Instance = 0;
 
 	Clear_Holograms();
-	delete Holograms;
 
 	DALogManager::Write_Log("_ESSENTIALS", "Unloaded Map Holograms feature.");
 }
@@ -54,15 +52,15 @@ void EssentialsMapHologramsClass::Settings_Loaded_Event() {
 				continue;
 			}
 
-			Holograms->Add(Name);
+			Holograms.Add(Name);
 			EssentialsHologramsManager::Create_Hologram(Name, WideStringClass(Token.Get_Remaining_String()), (EssentialsHologramColor::HologramColor)Color, Position);
 		}
 	}
 }
 
 void EssentialsMapHologramsClass::Clear_Holograms() {
-	for (int i = 0; i < Holograms->Count(); ++i) {
-		EssentialsHologramsManager::Delete_Hologram((*Holograms)[i]);
+	for (int i = 0; i < Holograms.Count(); ++i) {
+		EssentialsHologramsManager::Delete_Hologram(Holograms[i]);
 	}
-	Holograms->Delete_All();
+	Holograms.Delete_All();
 }

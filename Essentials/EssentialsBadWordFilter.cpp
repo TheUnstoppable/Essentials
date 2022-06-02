@@ -27,7 +27,6 @@
 EssentialsBadWordFilterClass* EssentialsBadWordFilterClass::Instance = 0;
 
 EssentialsBadWordFilterClass::EssentialsBadWordFilterClass() {
-	BadWords = new DynamicVectorClass<StringClass>;
 	Instance = this;
 
 	Register_Event(DAEvent::SETTINGSLOADED, INT_MAX);
@@ -39,9 +38,6 @@ EssentialsBadWordFilterClass::EssentialsBadWordFilterClass() {
 EssentialsBadWordFilterClass::~EssentialsBadWordFilterClass() {
 	Instance = 0;
 
-	BadWords->Clear();
-	delete BadWords;
-
 	DALogManager::Write_Log("_ESSENTIALS", "Unloaded Bad Word Filter feature.");
 }
 
@@ -52,17 +48,17 @@ void EssentialsBadWordFilterClass::Settings_Loaded_Event() {
 	DASettingsManager::Get_String(KickMessage, "Essentials", "BadWordFilterKickReason", "You have been kicked from server for saying disallowed words for {COUNT} time(s).");
 
 	INISection* Section = DASettingsManager::Get_Section("EssentialsBadWords");
-	BadWords->Clear();
+	BadWords.Clear();
 	if (Section) {
 		for (INIEntry* Entry = Section->EntryList.First(); Entry && Entry->Is_Valid(); Entry = Entry->Next()) {
 			if (!strcmp(Entry->Value, "1")) {
-				BadWords->Add(Entry->Entry);
+				BadWords.Add(Entry->Entry);
 			}
 		}
-		Console_Output("[Essentials] Loaded %d bad words.\n", BadWords->Count());
+		Console_Output("[Essentials] Loaded %d bad words.\n", BadWords.Count());
 	}
 
-	if (!BadWords->Count()) {
+	if (!BadWords.Count()) {
 		Console_Output("[Essentials] No bad words were found! Disabling Bad Word Filter feature...\n");
 		delete this;
 		return;
@@ -75,8 +71,8 @@ bool EssentialsBadWordFilterClass::Chat_Event(cPlayer* Player, TextMessageEnum T
 		String.Replace(" ", "", false);
 	}
 
-	for (int i = 0; i < BadWords->Count(); i++) {
-		StringClass Word = (*BadWords)[i];
+	for (int i = 0; i < BadWords.Count(); i++) {
+		StringClass Word = BadWords[i];
 		if (stristr(String.Peek_Buffer(), Word.Peek_Buffer())) {
 			EssentialsPlayerDataClass *Data = EssentialsEventClass::Instance->Get_Player_Data(Player);
 			Data->Increment_BadWordCount();

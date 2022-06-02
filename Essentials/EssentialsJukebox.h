@@ -45,6 +45,6 @@ private:
 	bool EnableShuffle;
 	bool ShuffleInitially;
 	StringClass GameOverMusic;
-	DynamicVectorClass<EssentialsJukeboxMusic*>* Musics;
+	SList<EssentialsJukeboxMusic> Musics;
 };
 

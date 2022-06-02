@@ -27,6 +27,6 @@ protected:
 	void Clear_Holograms();
 
 private:
-	DynamicVectorClass<StringClass>* Holograms;
+	DynamicVectorClass<StringClass> Holograms;
 };
 
