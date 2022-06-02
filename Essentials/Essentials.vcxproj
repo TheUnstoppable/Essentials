@@ -192,6 +192,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
   <ItemGroup>
     <ClCompile Include="EssentialsBadWordFilter.cpp" />
     <ClCompile Include="EssentialsCrateInjector.cpp" />
+    <ClCompile Include="EssentialsCustomPowerUpSpawners.cpp" />
     <ClCompile Include="EssentialsGruntEffect.cpp" />
     <ClCompile Include="EssentialsHolograms.cpp" />
     <ClCompile Include="EssentialsJukebox.cpp" />
@@ -210,6 +211,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
   <ItemGroup>
     <ClInclude Include="EssentialsBadWordFilter.h" />
     <ClInclude Include="EssentialsCrateInjector.h" />
+    <ClInclude Include="EssentialsCustomPowerUpSpawners.h" />
     <ClInclude Include="EssentialsGruntEffect.h" />
     <ClInclude Include="EssentialsHolograms.h" />
     <ClInclude Include="EssentialsJukebox.h" />

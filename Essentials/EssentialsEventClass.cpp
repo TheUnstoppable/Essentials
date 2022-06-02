@@ -30,6 +30,7 @@
 #include "EssentialsHolograms.h"
 #include "EssentialsJukebox.h"
 #include "EssentialsMapHolograms.h"
+#include "EssentialsCustomPowerUpSpawners.h"
 
 EssentialsEventClass* EssentialsEventClass::Instance = 0;
 
@@ -175,6 +176,19 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	else {
 		if (EssentialsMapHologramsClass::Instance) {
 			delete EssentialsMapHologramsClass::Instance;
+		}
+	}
+
+	bool CustomPowerUpSpawners = DASettingsManager::Get_Bool("Essentials", "EnableCustomPowerUpSpawners", false);
+	if (CustomPowerUpSpawners) {
+		if (!EssentialsCustomPowerUpSpawnersClass::Instance) {
+			new EssentialsCustomPowerUpSpawnersClass;
+			EssentialsCustomPowerUpSpawnersClass::Instance->Settings_Loaded_Event();
+		}
+	}
+	else {
+		if (EssentialsCustomPowerUpSpawnersClass::Instance) {
+			delete EssentialsCustomPowerUpSpawnersClass::Instance;
 		}
 	}
 
