@@ -32,6 +32,9 @@
     <ClCompile Include="EssentialsMapHolograms.cpp">
       <Filter>Features\Map Holograms</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsFreeForAllGameModeClass.cpp">
+      <Filter>Game Modes\Free For All</Filter>
+    </ClCompile>
     <ClCompile Include="EssentialsCustomPowerUpSpawners.cpp">
       <Filter>Features\Custom Power-Up Spawners</Filter>
     </ClCompile>
@@ -65,6 +68,9 @@
     <ClInclude Include="EssentialsMapHolograms.h">
       <Filter>Features\Map Holograms</Filter>
     </ClInclude>
+    <ClInclude Include="EssentialsFreeForAllGameModeClass.h">
+      <Filter>Game Modes\Free For All</Filter>
+    </ClInclude>
     <ClInclude Include="EssentialsCustomPowerUpSpawners.h">
       <Filter>Features\Custom Power-Up Spawners</Filter>
     </ClInclude>
@@ -96,6 +102,12 @@
     </Filter>
     <Filter Include="Features\Map Holograms">
       <UniqueIdentifier>{7c0acda1-78d5-4c1b-89b0-61fda5a220d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Modes">
+      <UniqueIdentifier>{44cabcfd-15db-43e7-b9bc-6cf3338cc614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Modes\Free For All">
+      <UniqueIdentifier>{b21e7d24-0bf7-41f8-b2b2-4345a2f811bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Features\Custom Power-Up Spawners">
       <UniqueIdentifier>{0ebf8372-2e7e-4bde-bd54-8ab96ba33508}</UniqueIdentifier>
