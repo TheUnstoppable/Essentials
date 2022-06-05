@@ -29,6 +29,14 @@ This feature utilizes Essentials' Holograms API and creates holograms in maps de
 ### Jukebox
 Essentials comes with a very advanced Jukebox feature, allowing players to create their own playlists with loop modes and shuffling.
 
+### Custom Power-Up Spawners
+This feature creates custom power-up spawners per map or globally with customizable spawn delay and presets.
+
+## Game Modes
+
+### Free For All (FFA)
+In this game mode, players try to get as much kills as possible. This is also known as Deathmatch game mode, where everyone can kill each other. This game mode forces all players into a team with custom player models. Has built in spawn system that server owners can define custom spawn points from configuration and completely disable spawn points in the map. Teaming (also known as Team Deathmatch/TDM) with this game mode is not possible. By default, Essentials comes with a configuration that defines all mission maps except for 1st mission (M13.mix) to be 100% compatible for FFA with power-up spawners using *Custom Power-Up Spawners* game feature, custom spawn points and blockers. You can find the default configuration of this game mode [here](Essentials/da_ffa.ini).
+
 ## Support
 You can find a list of commands and their descriptions at [here](docs/commands.md).  
 You can view API documentation at [here](docs/api/index.md).  
