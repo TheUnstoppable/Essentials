@@ -76,7 +76,7 @@ CHATCMD_DEF(EssentialsEventClass, SpawnObject) {
 		if (Def) {
 			if ((Def->Get_Class_ID() == CID_Vehicle && AllowVehicleSpawn) || (Def->Get_Class_ID() == CID_Soldier && AllowSoldierSpawn) ||
 				(Def->Get_Class_ID() == CID_Simple && AllowSimpleSpawn) || (Def->Get_Class_ID() == CID_PowerUp && AllowPowerupSpawn)) {
-				GameObject* obj = EssentialsUtils::Spawn_Object(Player, Def->Get_ID());
+				GameObject* obj = Spawn_Object(Player, Def->Get_ID());
 				if (obj) {
 					DA::Page_Player(Player, "Successfully spawned \"%s\".", DATranslationManager::Translate(obj));
 				} else {
@@ -180,7 +180,7 @@ CHATCMD_DEF(EssentialsEventClass, FastSpawn) {
 		StringClass* Preset = FastSpawnList->Get(Text[0]);
 		DefinitionClass* Def = Find_Named_Definition(Preset->Peek_Buffer());
 		if (Def) {
-			GameObject* obj = EssentialsUtils::Spawn_Object(Player, Def->Get_ID());
+			GameObject* obj = Spawn_Object(Player, Def->Get_ID());
 			if (obj) {
 				DA::Page_Player(Player, "Successfully spawned \"%s\".", DATranslationManager::Translate(Def));
 			} else {
@@ -222,7 +222,7 @@ CHATCMD_DEF(EssentialsEventClass, GoTo) {
 	cPlayer* Target = Match_Player(Player, Text[0], false, true);
 
 	if (Target) {
-		if (EssentialsUtils::Teleport_Player(Player, Target)) {
+		if (Teleport_Player(Player, Target)) {
 			DA::Page_Player(Player, "You've successfully teleported to %ws's location.", Target->Get_Name().Peek_Buffer());
 		} else {
 			DA::Page_Player(Player, "Could not teleport you to %ws's location.", Target->Get_Name().Peek_Buffer());
@@ -237,7 +237,7 @@ CHATCMD_DEF(EssentialsEventClass, Put) {
 	cPlayer* Target = Match_Player(Player, Text[2], false, true);
 
 	if (Source && Target) {
-		if (EssentialsUtils::Teleport_Player(Source, Target)) {
+		if (Teleport_Player(Source, Target)) {
 			DA::Page_Player(Player, "You've successfully teleported %ws to %ws's location.", Source->Get_Name().Peek_Buffer(), Target->Get_Name().Peek_Buffer());
 		} else {
 			DA::Page_Player(Player, "Could not teleport %ws to %ws's location.", Source->Get_Name().Peek_Buffer(), Target->Get_Name().Peek_Buffer());

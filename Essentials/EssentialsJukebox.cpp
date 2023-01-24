@@ -131,7 +131,7 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
 		if (Text.Size() == 0) {
 			if (EssentialsJukeboxMusic* Music = Data->Get_CurrentMusic()) {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Now playing: %s (%s) - Use \"!jb help\" to control jukebox.", Music->Name, EssentialsUtils::Format_Seconds((int)Music->Duration));
+				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Now playing: %s (%s) - Use \"!jb help\" to control jukebox.", Music->Name, Format_Seconds((int)Music->Duration));
 			}
 			else {
 				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] There is nothing playing at the moment.");
@@ -174,7 +174,7 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 		else if (Text[1] == "list") {
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] All musics (%d in total): ", Musics.Get_Count());
 			for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] %s (%s)", Node->Data()->Name, EssentialsUtils::Format_Seconds((int)Node->Data()->Duration));
+				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] %s (%s)", Node->Data()->Name, Format_Seconds((int)Node->Data()->Duration));
 			}
 		}
 		else if (Text[1] == "next") {
@@ -190,7 +190,7 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			DynamicVectorClass<EssentialsJukeboxMusic*>& queueMusics = Data->Get_Queue();
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Musics in your queue (%d in total): ", queueMusics.Count());
 			for (int i = 0; i < queueMusics.Count(); ++i) {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] #%d: %s (%s)", i + 1, queueMusics[i]->Name, EssentialsUtils::Format_Seconds((int)queueMusics[i]->Duration, false));
+				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] #%d: %s (%s)", i + 1, queueMusics[i]->Name, Format_Seconds((int)queueMusics[i]->Duration, false));
 			}
 		}
 		else if (Text[1] == "clear") {

@@ -21,12 +21,10 @@
 #include "da.h"
 #include "da_settings.h"
 // Custom
-#include "SoldierGameObj.h"
-#include "VehicleGameObj.h"
 #include "EssentialsUtils.h"
 #include "EssentialsEventClass.h"
 
-bool EssentialsUtils::Make_Spectator(cPlayer* Player) {
+bool Make_Spectator(cPlayer* Player) {
 	SoldierGameObj *Soldier = Player->Get_GameObj();
 	if (Get_Object_Type(Soldier) != -4) {
 		if (!Soldier->Get_Vehicle()) {
@@ -67,7 +65,7 @@ bool EssentialsUtils::Make_Spectator(cPlayer* Player) {
 	return false;
 }
 
-GameObject* EssentialsUtils::Spawn_Object(cPlayer *Player, unsigned long DefinitionID) {
+GameObject* Spawn_Object(cPlayer *Player, unsigned long DefinitionID) {
 	DefinitionClass* Definition = Find_Definition(DefinitionID);
 	if (Definition) {
 		if (Definition->Get_Class_ID() == CID_Soldier || Definition->Get_Class_ID() == CID_PowerUp || Definition->Get_Class_ID() == CID_Vehicle || Definition->Get_Class_ID() == CID_Simple) {
@@ -81,22 +79,11 @@ GameObject* EssentialsUtils::Spawn_Object(cPlayer *Player, unsigned long Definit
 			}
 
 			PhysicalGameObj* Object = Create_Object(Definition, Position);
-			if (Object->As_VehicleGameObj()) {
+			if (!Object->As_PowerUpGameObj()) {
 				Fix_Stuck_Object(Soldier, 5.f);
 				if (Object->Peek_Physical_Object()->As_MoveablePhysClass()) {
 					Fix_Stuck_Object(Object, 5.f);
 				}
-			}
-			else if (Object->As_SoldierGameObj()) {
-				Fix_Stuck_Object(Soldier, 5.f);
-				Fix_Stuck_Object(Object, 5.f);
-			}
-			else if (Object->As_PowerUpGameObj()) {
-
-			}
-			else if (Object->As_SimpleGameObj()) {
-				Fix_Stuck_Object(Soldier, 5.f);
-				Fix_Stuck_Object(Object, 5.f);
 			}
 
 			return Object;
@@ -106,7 +93,7 @@ GameObject* EssentialsUtils::Spawn_Object(cPlayer *Player, unsigned long Definit
 	return 0;
 }
 
-bool EssentialsUtils::Teleport_Player(cPlayer* Player, cPlayer* Target) {
+bool Teleport_Player(cPlayer* Player, cPlayer* Target) {
 	PhysicalGameObj* SourceObject = 0;
 	PhysicalGameObj* TargetObject = 0;
 	
@@ -141,7 +128,7 @@ bool EssentialsUtils::Teleport_Player(cPlayer* Player, cPlayer* Target) {
 	return false;
 }
 
-bool EssentialsUtils::Teleport_Player(cPlayer* Player, PhysicalGameObj* Object) {
+bool Teleport_Player(cPlayer* Player, PhysicalGameObj* Object) {
 	PhysicalGameObj* SourceObject = 0;
 
 	if (Player->Is_Active()) {
@@ -167,29 +154,20 @@ bool EssentialsUtils::Teleport_Player(cPlayer* Player, PhysicalGameObj* Object) 
 	return false;
 }
 
-StringClass EssentialsUtils::Format_Seconds(int Seconds, bool AppendUnit) {
+StringClass Format_Seconds(int Seconds, bool AppendUnit) {
 	int hours = Seconds / 3600;
 	int minutes = (Seconds / 60) - (hours * 60);
 	int seconds = Seconds - (((hours * 60) + minutes) * 60);
 
-	StringClass hourFormat = hours < 9 ? StringFormat("0%d", hours) : StringFormat("%d", hours);
-	StringClass minuteFormat = minutes < 9 ? StringFormat("0%d", minutes) : StringFormat("%d", minutes);
-	StringClass secondFormat = seconds < 9 ? StringFormat("0%d", seconds) : StringFormat("%d", seconds);
-
 	if (AppendUnit) {
 		if (hours > 0) {
-			return StringFormat("%s:%s:%s hours", hourFormat, minuteFormat, secondFormat);
+			return StringFormat("%02d:%02d:%02d hours", hours, minutes, seconds);
 		}
 		else {
-			return StringFormat("%s:%s minutes", minuteFormat, secondFormat);
+			return StringFormat("%02d:%02d minutes", minutes, seconds);
 		}
 	}
 	else {
-		if (hours > 0) {
-			return StringFormat("%s:%s:%s", hourFormat, minuteFormat, secondFormat);
-		}
-		else {
-			return StringFormat("00:%s:%s", minuteFormat, secondFormat);
-		}
+		return StringFormat("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 }

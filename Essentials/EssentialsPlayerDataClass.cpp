@@ -90,7 +90,7 @@ bool EssentialsPlayerDataClass::Set_IsSpectating(bool value) {
 			Commands->Destroy_Object(Get_Owner()->Get_GameObj());
 		}
 		else {
-			IsSpectating = EssentialsUtils::Make_Spectator(Get_Owner());
+			IsSpectating = Make_Spectator(Get_Owner());
 			if (IsSpectating) {
 				DA::Page_Player(Get_Owner(), "You are now spectating.");
 			}
@@ -130,7 +130,7 @@ EssentialsJukeboxMusic* EssentialsPlayerDataClass::Set_CurrentMusic(EssentialsJu
 	if (!IsStopped) {
 		CurrentMusic = music;
 		if (CurrentMusic) {
-			DA::Private_Color_Message(Get_Owner(), JUKEBOXCOLOR, "[Jukebox] Now playing: %s (%s) - Use \"!jb help\" to control jukebox.", CurrentMusic->Name, EssentialsUtils::Format_Seconds((int)CurrentMusic->Duration));
+			DA::Private_Color_Message(Get_Owner(), JUKEBOXCOLOR, "[Jukebox] Now playing: %s (%s) - Use \"!jb help\" to control jukebox.", CurrentMusic->Name, Format_Seconds((int)CurrentMusic->Duration));
 			Set_Background_Music_Player(Get_Owner()->Get_GameObj(), CurrentMusic->File);
 		}
 		else {

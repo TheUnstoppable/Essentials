@@ -10,11 +10,8 @@
 
 #pragma once
 
-class EssentialsUtils {
-public:
-	static bool Make_Spectator(cPlayer* Player);
-	static GameObject* Spawn_Object(cPlayer* Player, unsigned long DefinitionID);
-	static bool Teleport_Player(cPlayer* Player, cPlayer* Target);
-	static bool Teleport_Player(cPlayer* Player, PhysicalGameObj *Object);
-	static StringClass Format_Seconds(int Seconds, bool AppendUnit = true);
-};
+extern bool Make_Spectator(cPlayer* Player);
+extern GameObject* Spawn_Object(cPlayer* Player, unsigned long DefinitionID);
+extern bool Teleport_Player(cPlayer* Player, cPlayer* Target);
+extern bool Teleport_Player(cPlayer* Player, PhysicalGameObj* Object);
+extern StringClass Format_Seconds(int Seconds, bool AppendUnit = true);
