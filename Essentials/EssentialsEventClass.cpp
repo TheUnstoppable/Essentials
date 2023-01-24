@@ -31,6 +31,7 @@
 #include "EssentialsJukebox.h"
 #include "EssentialsMapHolograms.h"
 #include "EssentialsCustomPowerUpSpawners.h"
+#include "EssentialsAutoAnnounce.h"
 
 EssentialsEventClass* EssentialsEventClass::Instance = 0;
 
@@ -189,6 +190,19 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	else {
 		if (EssentialsCustomPowerUpSpawnersClass::Instance) {
 			delete EssentialsCustomPowerUpSpawnersClass::Instance;
+		}
+	}
+
+	bool AutoAnnounce = DASettingsManager::Get_Bool("Essentials", "EnableAutoAnnounce", false);
+	if (AutoAnnounce) {
+		if (!EssentialsAutoAnnounceClass::Instance) {
+			new EssentialsAutoAnnounceClass;
+			EssentialsAutoAnnounceClass::Instance->Settings_Loaded_Event();
+		}
+	}
+	else {
+		if (EssentialsAutoAnnounceClass::Instance) {
+			delete EssentialsAutoAnnounceClass::Instance;
 		}
 	}
 

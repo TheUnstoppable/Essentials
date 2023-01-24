@@ -38,6 +38,9 @@
     <ClCompile Include="EssentialsCustomPowerUpSpawners.cpp">
       <Filter>Features\Custom Power-Up Spawners</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsAutoAnnounce.cpp">
+      <Filter>Features\Auto Announce</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="General.h" />
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="EssentialsCustomPowerUpSpawners.h">
       <Filter>Features\Custom Power-Up Spawners</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsAutoAnnounce.h">
+      <Filter>Features\Auto Announce</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +117,9 @@
     </Filter>
     <Filter Include="Features\Custom Power-Up Spawners">
       <UniqueIdentifier>{0ebf8372-2e7e-4bde-bd54-8ab96ba33508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Auto Announce">
+      <UniqueIdentifier>{53aff38e-70d5-4b9d-ad77-960b5a84007e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
