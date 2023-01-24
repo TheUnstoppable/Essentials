@@ -855,9 +855,8 @@ CHATCMD_DEF(EssentialsEventClass, GodMode) {
 }
 
 CHATCMD_DEF(EssentialsEventClass, Screenshot) {
-	cPlayer* Target = Match_Player(Player, Text[0], false, true);
-	if (Target) {
-		Console_InputF("sshot %d", Target->Get_Id());
+	if (cPlayer* Target = Match_Player(Player, Text[0], false, true)) {
+		Take_Screenshot(Target->Get_Id());
 		DA::Page_Player(Player, "Command to take a screenshot of %ws's game has been sent.", Target->Get_Name());
 	}
 
