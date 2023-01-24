@@ -82,6 +82,8 @@ public:
 	CHATCMD_DECL_ST(Screenshot);         // !screen
 	CHATCMD_DECL_MT(GetModelName);       // !modelname
 	CHATCMD_DECL_MT(GetPresetName);      // !presetname
+	CHATCMD_DECL_ST(Sudo);               // !sudo
+	CHATCMD_DECL_ST(SudoTeam);           // !sudoteam
 
 	bool FloodingBlocksChatMessages;
 	bool ShowConnectionRequestMessages;
