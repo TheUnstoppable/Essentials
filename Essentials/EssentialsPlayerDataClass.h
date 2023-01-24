@@ -26,14 +26,14 @@ public:
 	bool Set_IsSpectating(bool value);
 
 	// Bad Word Filter
-	int Get_BadWordCount();
+	int Get_BadWordCount() const;
 	int Set_BadWordCount(int value);
 	int Increment_BadWordCount();
 	int Decrement_BadWordCount();
 
 	// Jukebox
 	int Get_MusicIndex();
-	EssentialsJukeboxMusic* Get_CurrentMusic();
+	EssentialsJukeboxMusic* Get_CurrentMusic() const;
 	EssentialsJukeboxMusic* Set_CurrentMusic(EssentialsJukeboxMusic* music);
 	void Add_Music(EssentialsJukeboxMusic* music);
 	void Remove_Music(EssentialsJukeboxMusic* music);
@@ -41,10 +41,11 @@ public:
 	DynamicVectorClass<EssentialsJukeboxMusic*>& Get_Queue();
 	void Clear_Queue();
 	void Shuffle_List();
-	int Get_LoopMode();
+	int Get_LoopMode() const;
 	int Set_LoopMode(int mode);
-	bool Get_IsStopped();
+	bool Get_IsStopped() const;
 	bool Set_IsStopped(bool stopped);
+
 private:
 	// Basic Commands
 	bool IsFlying;

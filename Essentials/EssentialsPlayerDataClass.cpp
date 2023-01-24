@@ -21,7 +21,6 @@
 #include "da_settings.h"
 // Custom
 #include "EssentialsPlayerDataClass.h"
-
 #include "EssentialsEventClass.h"
 #include "EssentialsUtils.h"
 
@@ -101,7 +100,7 @@ bool EssentialsPlayerDataClass::Set_IsSpectating(bool value) {
 	return false;
 }
 
-int EssentialsPlayerDataClass::Get_BadWordCount() {
+int EssentialsPlayerDataClass::Get_BadWordCount() const {
 	return BadWordCount;
 }
 
@@ -122,7 +121,7 @@ int EssentialsPlayerDataClass::Get_MusicIndex() {
 	return QueueList.ID(CurrentMusic);
 }
 
-EssentialsJukeboxMusic* EssentialsPlayerDataClass::Get_CurrentMusic() {
+EssentialsJukeboxMusic* EssentialsPlayerDataClass::Get_CurrentMusic() const {
 	return CurrentMusic;
 }
 
@@ -176,7 +175,7 @@ void EssentialsPlayerDataClass::Shuffle_List() {
 	}
 }
 
-int EssentialsPlayerDataClass::Get_LoopMode() {
+int EssentialsPlayerDataClass::Get_LoopMode() const {
 	return LoopMode;
 }
 
@@ -185,7 +184,7 @@ int EssentialsPlayerDataClass::Set_LoopMode(int mode) {
 	return LoopMode;
 }
 
-bool EssentialsPlayerDataClass::Get_IsStopped() {
+bool EssentialsPlayerDataClass::Get_IsStopped() const {
 	return IsStopped;
 }
 
