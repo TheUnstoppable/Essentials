@@ -142,7 +142,7 @@ ConnectionAcceptanceFilter::STATUS EssentialsAuthenticationHandler::EssentialsAu
 						AuthContext->AuthState = 1;
 						break;
 					}
-					case 4: {
+					case 2: {
 						AuthContext->Password_Validation_Callback(false, L"Client does not need authentication.");
 						DALogManager::Write_Log("_ESSAUTH", "3.2 %d %ws 0", Request.clientId, Request.clientName);
 						break;
