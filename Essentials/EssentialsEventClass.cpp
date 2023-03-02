@@ -32,6 +32,7 @@
 #include "EssentialsMapHolograms.h"
 #include "EssentialsCustomPowerUpSpawners.h"
 #include "EssentialsAutoAnnounce.h"
+#include "EssentialsAuthentication.h"
 #include "EssentialsCustomTag.h"
 #include "EssentialsVoting.h"
 
@@ -143,6 +144,16 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	}
 
 	EssentialsHologramsManager::Reinitialize_All_Holograms();
+
+	bool EnableAuthentication = DASettingsManager::Get_Bool("Essentials", "EnableAuthentication", false);
+	if (EnableAuthentication && !EssentialsAuthenticationManager::Is_Initialized()) {
+		EssentialsAuthenticationManager::Init();
+		Console_Output("[Essentials] Authentication system is now enabled.\n");
+	}
+	else if (!EnableAuthentication && EssentialsAuthenticationManager::Is_Initialized()) {
+		EssentialsAuthenticationManager::Shutdown();
+		Console_Output("[Essentials] Authentication system is now disabled.\n");
+	}
 
 	bool BadWordFilter = DASettingsManager::Get_Bool("Essentials", "EnableBadWordFilter", false);
 	if (BadWordFilter) {

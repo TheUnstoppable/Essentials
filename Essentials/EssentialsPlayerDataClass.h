@@ -13,6 +13,14 @@
 #include "da_player.h"
 #include "EssentialsJukebox.h"
 
+namespace EssentialsAuthenticationState {
+	typedef enum {
+		AUTHSTATE_NOTREGISTERED,
+		AUTHSTATE_NOTAUTHED,
+		AUTHSTATE_AUTHED
+	} AuthenticationState;
+}
+
 class EssentialsPlayerDataClass : public DAPlayerDataClass {
 public:
 	void Init() override;

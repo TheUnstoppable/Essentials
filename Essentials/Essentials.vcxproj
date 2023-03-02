@@ -190,6 +190,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EssentialsAuthentication.cpp" />
     <ClCompile Include="EssentialsAutoAnnounce.cpp" />
     <ClCompile Include="EssentialsBadWordFilter.cpp" />
     <ClCompile Include="EssentialsCrateInjector.cpp" />
@@ -213,6 +214,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EssentialsAuthentication.h" />
     <ClInclude Include="EssentialsAutoAnnounce.h" />
     <ClInclude Include="EssentialsBadWordFilter.h" />
     <ClInclude Include="EssentialsCrateInjector.h" />
