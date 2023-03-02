@@ -44,9 +44,7 @@ void EssentialsCrateManager::Init() {
 
 EssentialsCrateManager::~EssentialsCrateManager() {
 	if (!DAGameManager::Is_Shutdown_Pending()) {
-		for (int i = 0; i < CustomObjs.Count(); i++) {
-			CustomObjs[i]->Set_Delete_Pending();
-		}
+		Delete_Objects();
 	}
 
 	DACrateManager::~DACrateManager();
@@ -54,7 +52,8 @@ EssentialsCrateManager::~EssentialsCrateManager() {
 
 void EssentialsCrateManager::Settings_Loaded_Event() {
 	Delete_Customs();
-	Delete_Objects();
+
+	DACrateManager::Settings_Loaded_Event();
 
 	InjectCrates = DASettingsManager::Get_Bool("Essentials", "EnableCrateInjection", false);
 
@@ -129,43 +128,47 @@ void EssentialsCrateManager::Settings_Loaded_Event() {
 			Console_Output("[Essentials] Loaded %d crate injections.\n", CustomPowerups.Count());
 		}
 	}
+}
 
-	DACrateManager::Settings_Loaded_Event();
+void EssentialsCrateManager::Game_Over_Event() {
+	DACrateManager::Game_Over_Event();
 }
 
 void EssentialsCrateManager::Timer_Expired(int Number, unsigned int Data) {
 	if (InjectCrates) {
-		CustomPowerupClass* Custom = 0;
-		int Number = Get_Random_Int(0, TotalOdds);
-		VECTOR_FOREACH_REVERSE(i, CustomPowerups) {
-			if (Number < CustomPowerups[i]->CalculatedOdds) {
-				Custom = CustomPowerups[i];
-				break;
+		if (The_Game()->Get_Current_Players() && The_Game()->Is_Gameplay_Permitted()) {
+			CustomPowerupClass* Custom = 0;
+			int Number = Get_Random_Int(0, TotalOdds);
+			VECTOR_FOREACH_REVERSE(i, CustomPowerups) {
+				if (Number < CustomPowerups[i]->CalculatedOdds) {
+					Custom = CustomPowerups[i];
+					break;
+				}
 			}
-		}
-		if (Custom) {
-			if (Custom->Preset != "*") {
-				if (Vector3* Position = Select_Spawner()) {
-					if (PhysicalGameObj* CustomObj = Create_Object(Custom->Preset, *Position)) {
-						CrateObjs.Add(CustomObj);
-						if (!Custom->DoCrateBehavior) {
-							CustomObjs.Add(CustomObj);
-						}
-						if (!Custom->Model.Is_Empty()) {
-							Commands->Set_Model(CustomObj, Custom->Model);
+			if (Custom) {
+				if (Custom->Preset != "*") {
+					if (Vector3* Position = Select_Spawner()) {
+						if (PhysicalGameObj* CustomObj = Create_Object(Custom->Preset, *Position)) {
+							CrateObjs.Add(CustomObj);
+							if (!Custom->DoCrateBehavior) {
+								CustomObjs.Add(CustomObj);
+							}
+							if (!Custom->Model.Is_Empty()) {
+								Commands->Set_Model(CustomObj, Custom->Model);
+							}
+						} else {
+							Console_Output("[Essentials] Failed to create custom crate \"%s\".\n", Custom->Preset.Peek_Buffer());
+							Start_Timer(1, Get_Random_Float(SpawnTimeMin, SpawnTimeMax));
 						}
 					} else {
-						Console_Output("[Essentials] Failed to create custom crate \"%s\".\n", Custom->Preset.Peek_Buffer());
 						Start_Timer(1, Get_Random_Float(SpawnTimeMin, SpawnTimeMax));
 					}
 				} else {
-					Start_Timer(1, Get_Random_Float(SpawnTimeMin, SpawnTimeMax));
+					DACrateManager::Timer_Expired(Number, Data);
 				}
 			} else {
 				DACrateManager::Timer_Expired(Number, Data);
 			}
-		} else {
-			DACrateManager::Timer_Expired(Number, Data);
 		}
 	} else {
 		DACrateManager::Timer_Expired(Number, Data);
@@ -243,7 +246,8 @@ void EssentialsCrateManager::Delete_Customs() {
 
 void EssentialsCrateManager::Delete_Objects() {
 	VECTOR_FOREACH(i, CustomObjs) {
-		delete CustomObjs[i];
+		CrateObjs.DeleteObj(CustomObjs[i]);
+		Commands->Destroy_Object(CustomObjs[i]);
 	}
 
 	CustomObjs.Delete_All();

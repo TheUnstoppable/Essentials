@@ -26,6 +26,7 @@ public:
 	void Init() override;
 	~EssentialsCrateManager();
 	void Settings_Loaded_Event() override;
+	void Game_Over_Event() override;
 	void Timer_Expired(int Number, unsigned int Data) override;
 	void PowerUp_Grant_Event(cPlayer* Player, const PowerUpGameObjDef* PowerUp, PowerUpGameObj* PowerUpObj) override;
 	void Object_Destroyed_Event(GameObject* obj) override;
