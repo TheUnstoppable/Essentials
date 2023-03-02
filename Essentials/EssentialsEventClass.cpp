@@ -516,7 +516,7 @@ void EssentialsEventClass::Ren_Log_Event(const char* Output) {
 				WideStringClass Name;
 				for (SLNode<cPlayer>* z = Get_Player_List()->Head(); z; z = z->Next()) {
 					cPlayer* Player = z->Data();
-					if (Player->Get_Id() == playerId) {
+					if (Player->Is_Active() && Player->Get_Id() == playerId) {
 						Name = Player->Get_Name();
 						break;
 					}
