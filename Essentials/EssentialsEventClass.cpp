@@ -398,6 +398,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	CHATCMD_STNG_MT(GetPresetName);
 	CHATCMD_STNG_ST(Sudo);
 	CHATCMD_STNG_ST(SudoTeam);
+	CHATCMD_STNG_ST(ToggleGameplay);
 
 	Unregister_Chat_Command("!fly");
 	Unregister_Chat_Command("!spectate");
@@ -431,6 +432,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	Unregister_Chat_Command("!getpresetname");
 	Unregister_Chat_Command("!sudo");
 	Unregister_Chat_Command("!sudoteam");
+	Unregister_Chat_Command("!togglegameplay");
 	
 	CHATCMD_REG(EssentialsEventClass, Fly, "!fly", 0);
 	CHATCMD_REG(EssentialsEventClass, Spectate, "!spectate|!specmode|!spec", 0);
@@ -464,6 +466,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	CHATCMD_REG(EssentialsEventClass, GetPresetName, "!getpresetname|!prsname|!gpn", 0);
 	CHATCMD_REG(EssentialsEventClass, Sudo, "!sudo", 1);
 	CHATCMD_REG(EssentialsEventClass, SudoTeam, "!sudoteam|!sudot", 1);
+	CHATCMD_REG(EssentialsEventClass, ToggleGameplay, "!togglegameplay|!gameplay|!togglegp|!tgp|!sgp", 0);
 }
 
 bool EssentialsEventClass::Chat_Event(cPlayer* Player, TextMessageEnum Type, const wchar_t* Message, int ReceiverID) {

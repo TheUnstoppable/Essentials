@@ -952,3 +952,10 @@ CHATCMD_DEF(EssentialsEventClass, SudoTeam) {
 	}
 	return false;
 }
+
+CHATCMD_DEF(EssentialsEventClass, ToggleGameplay) {
+	bool allowed = !Is_Gameplay_Allowed();
+	Set_Gameplay_Allowed(allowed);
+	DA::Page_Player(Player, allowed ? "Gameplay is now allowed." : "Gameplay is now pending.");
+	return false;
+}

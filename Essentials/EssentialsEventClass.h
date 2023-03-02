@@ -95,6 +95,7 @@ public:
 	CHATCMD_DECL_MT(GetPresetName);      // !presetname
 	CHATCMD_DECL_ST(Sudo);               // !sudo
 	CHATCMD_DECL_ST(SudoTeam);           // !sudoteam
+	CHATCMD_DECL_ST(ToggleGameplay);     // !togglegameplay
 
 	// General Settings
 	bool FloodingBlocksChatMessages;
