@@ -23,6 +23,7 @@
 // Custom
 #include "EssentialsUtils.h"
 #include "EssentialsEventClass.h"
+#include <wincrypt.h>
 
 bool Make_Spectator(cPlayer* Player) {
 	SoldierGameObj *Soldier = Player->Get_GameObj();
@@ -170,4 +171,118 @@ StringClass Format_Seconds(int Seconds, bool AppendUnit) {
 	else {
 		return StringFormat("%02d:%02d:%02d", hours, minutes, seconds);
 	}
+}
+
+StringClass Format_Seconds_Friendly(int Seconds) {
+	int hours = Seconds / 3600;
+	int minutes = (Seconds / 60) - (hours * 60);
+	int seconds = Seconds - (((hours * 60) + minutes) * 60);
+
+	StringClass out;
+	if (hours > 0) {
+		out += StringFormat("%d hour", hours);
+		if (hours > 1) {
+			out += "s";
+		}
+	}
+
+	if (hours != 0 && minutes != 0 && seconds == 0) {
+		out += " and ";
+	}
+	else if (hours != 0 && minutes != 0 && seconds != 0) {
+		out += " ";
+	}
+
+	if (minutes > 0) {
+		out += StringFormat("%d minute", minutes);
+		if (minutes > 1) {
+			out += "s";
+		}
+	}
+
+	if ((hours != 0 || minutes != 0) && seconds != 0) {
+		out += " and ";
+	}
+
+	if (seconds > 0) {
+		out += StringFormat("%d second", seconds);
+		if (seconds > 1) {
+			out += "s";
+		}
+	}
+
+	return out;
+}
+
+bool Get_MD5_Hash(StringClass text, StringClass& out) {
+	HCRYPTPROV cryptProvider = 0;
+	HCRYPTHASH cryptHasher = 0;
+
+	if (!CryptAcquireContext(&cryptProvider, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+		return false;
+	}
+
+	if (!CryptCreateHash(cryptProvider, CALG_MD5, 0, 0, &cryptHasher)) {
+		CryptReleaseContext(cryptProvider, 0);
+		return false;
+	}
+
+	if (!CryptHashData(cryptHasher, (BYTE*)text.Peek_Buffer(), text.Get_Length(), 0)) {
+		CryptReleaseContext(cryptProvider, 0);
+		CryptDestroyHash(cryptHasher);
+		return false;
+	}
+
+	const DWORD len = 16;
+	BYTE buf[len];
+	if (!CryptGetHashParam(cryptHasher, HP_HASHVAL, buf, const_cast<DWORD*>(&len), 0)) {
+		CryptReleaseContext(cryptProvider, 0);
+		CryptDestroyHash(cryptHasher);
+		return false;
+	}
+
+	char outbuf[33];
+	for (int i = 0; i < len; ++i) {
+		sprintf(outbuf + (i * 2), "%02x", buf[i]);
+	}
+	outbuf[32] = '\0';
+
+	out = outbuf;
+	return true;
+}
+
+FileClass* Create_Or_Get_Essentials_Data_File(StringClass name, int mode) {
+	if (!(CreateDirectory("EssentialsData", NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) {
+		return 0;
+	}
+
+	RawFileClass* file = new RawFileClass(StringFormat("EssentialsData\\%s", name));
+	if (file->Open(mode)) {
+		return file;
+	}
+
+	delete file;
+	return 0;
+}
+
+bool String_Contains(StringClass first, StringClass second) {
+	int firstLen = first.Get_Length();
+	int secondLen = second.Get_Length();
+
+	if (secondLen > firstLen) {
+		return false;
+	}
+
+	const char* firstBuf = first.Peek_Buffer();
+	const char* secondBuf = second.Peek_Buffer();
+
+	int index = 0;
+	while (firstLen >= secondLen + index) {
+		if (!_strnicmp(firstBuf + index, secondBuf, secondLen)) {
+			return true;
+		}
+		index++;
+	}
+
+	return false;
 }

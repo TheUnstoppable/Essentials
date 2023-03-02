@@ -15,3 +15,7 @@ extern GameObject* Spawn_Object(cPlayer* Player, unsigned long DefinitionID);
 extern bool Teleport_Player(cPlayer* Player, cPlayer* Target);
 extern bool Teleport_Player(cPlayer* Player, PhysicalGameObj* Object);
 extern StringClass Format_Seconds(int Seconds, bool AppendUnit = true);
+extern StringClass Format_Seconds_Friendly(int Seconds);
+extern bool Get_MD5_Hash(StringClass text, StringClass& out);
+extern FileClass* Create_Or_Get_Essentials_Data_File(StringClass name, int mode = 0);
+extern bool String_Contains(StringClass first, StringClass second);
