@@ -85,7 +85,7 @@ EssentialsEventClass::EssentialsEventClass() {
 	Register_Event(DAEvent::LEVELLOADED, INT_MAX);
 	Register_Event(DAEvent::SETTINGSLOADED, INT_MAX);
 	Register_Event(DAEvent::CHAT, INT_MAX);
-	Register_Event(DAEvent::CONNECTIONREQUEST, INT_MAX);
+	Register_Event(DAEvent::CONNECTIONREQUEST, 0);
 	Register_Event(DAEvent::RENLOG, INT_MAX);
 	Register_Object_Event(DAObjectEvent::DAMAGERECEIVEDREQUEST, DAObjectEvent::BUILDING);
 }
