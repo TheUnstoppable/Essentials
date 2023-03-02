@@ -32,6 +32,18 @@ Essentials comes with a very advanced Jukebox feature, allowing players to creat
 ### Custom Power-Up Spawners
 This feature creates custom power-up spawners per map or globally with customizable spawn delay and presets.
 
+### Auto Announce
+This feature announces messages defined in the configuration.
+
+### Authentication
+Displays a dialog to registered players during connection request. Prompts for password, nick change or allows cancellation of authorization and kicks the player.
+
+### Custom Tag
+Displays custom tags under player's name tags, and saves into a database.
+
+### Voting
+Allows voting for more time, ending the current map, restarting the current map, changing the next map, kicking a player and disabling building repairs.
+
 ## Game Modes
 
 ### Free For All (FFA)

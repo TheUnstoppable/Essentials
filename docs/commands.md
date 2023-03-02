@@ -244,3 +244,27 @@ Gets model name of command executor's or `target`'s player or vehicle object.
 
 Gets preset name and ID of command executor's or `target`'s player or vehicle object.
 <br /><br />
+
+
+### !togglegameplay
+- **Alias(es)**: !togglegameplay, !gameplay, !togglegp, !tgp, !sgp
+- **Usage**: !togglegameplay
+
+Pauses the game and displays "GAMEPLAY IS PENDING" to all supported clients.
+<br /><br />
+
+
+### !reloadlevel
+- **Alias(es)**: !reloadlevel, !reloadmap, !restartlevel, !rellvl
+- **Usage**: !reloadlevel
+
+Causes the server to reload the current map without changing the rotation index and raising Game Over events.
+<br /><br />
+
+
+### !reloadclient
+- **Alias(es)**: !reloadclient, !relclient, !relcli, !rc
+- **Usage**: !reloadclient \<target\>
+
+Causes the specified client to reload the current map.
+<br /><br />
