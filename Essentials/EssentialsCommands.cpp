@@ -959,3 +959,18 @@ CHATCMD_DEF(EssentialsEventClass, ToggleGameplay) {
 	DA::Page_Player(Player, allowed ? "Gameplay is now allowed." : "Gameplay is now pending.");
 	return false;
 }
+
+CHATCMD_DEF(EssentialsEventClass, ReloadLevel) {
+	Reload_Level();
+	return false;
+}
+
+CHATCMD_DEF(EssentialsEventClass, ReloadClient) {
+	cPlayer* Target = Match_Player(Player, Text[1], false, true);
+
+	if (Target) {
+		Force_Client_Reload(Target->Get_Id());
+		DA::Page_Player(Player, "Forcing %ws's client to reload the current level.", Target->Get_Name());
+	}
+	return false;
+}

@@ -96,6 +96,8 @@ public:
 	CHATCMD_DECL_ST(Sudo);               // !sudo
 	CHATCMD_DECL_ST(SudoTeam);           // !sudoteam
 	CHATCMD_DECL_ST(ToggleGameplay);     // !togglegameplay
+	CHATCMD_DECL_ST(ReloadLevel);        // !reloadlevel
+	CHATCMD_DECL_ST(ReloadClient);       // !reloadclient
 
 	// General Settings
 	bool FloodingBlocksChatMessages;
