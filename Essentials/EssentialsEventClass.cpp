@@ -32,6 +32,7 @@
 #include "EssentialsMapHolograms.h"
 #include "EssentialsCustomPowerUpSpawners.h"
 #include "EssentialsAutoAnnounce.h"
+#include "EssentialsCustomTag.h"
 
 EssentialsEventClass* EssentialsEventClass::Instance = 0;
 
@@ -203,6 +204,19 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	else {
 		if (EssentialsAutoAnnounceClass::Instance) {
 			delete EssentialsAutoAnnounceClass::Instance;
+		}
+	}
+
+	bool CustomTag = DASettingsManager::Get_Bool("Essentials", "EnableCustomTag", false);
+	if (CustomTag) {
+		if (!EssentialsCustomTagClass::Instance) {
+			new EssentialsCustomTagClass;
+			EssentialsCustomTagClass::Instance->Settings_Loaded_Event();
+		}
+	}
+	else {
+		if (EssentialsCustomTagClass::Instance) {
+			delete EssentialsCustomTagClass::Instance;
 		}
 	}
 

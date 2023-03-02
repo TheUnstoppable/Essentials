@@ -41,6 +41,9 @@
     <ClCompile Include="EssentialsAutoAnnounce.cpp">
       <Filter>Features\Auto Announce</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsCustomTag.cpp">
+      <Filter>Features\Custom Tag</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="General.h" />
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="EssentialsAutoAnnounce.h">
       <Filter>Features\Auto Announce</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCustomTag.h">
+      <Filter>Features\Custom Tag</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +126,9 @@
     </Filter>
     <Filter Include="Features\Auto Announce">
       <UniqueIdentifier>{53aff38e-70d5-4b9d-ad77-960b5a84007e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Custom Tag">
+      <UniqueIdentifier>{d2ad736d-f792-4233-a41f-bad07b522186}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
