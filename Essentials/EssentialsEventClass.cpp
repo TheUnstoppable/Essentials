@@ -33,6 +33,7 @@
 #include "EssentialsCustomPowerUpSpawners.h"
 #include "EssentialsAutoAnnounce.h"
 #include "EssentialsCustomTag.h"
+#include "EssentialsVoting.h"
 
 EssentialsEventClass* EssentialsEventClass::Instance = 0;
 
@@ -76,15 +77,28 @@ EssentialsEventClass::EssentialsEventClass() {
 	StringClass ConnectionRequestMessageFormat = "{NAME} is loading to join server.";
 	StringClass ConnectionLostMessageFormat = "{NAME} lost communication to server.";
 
+	RestoreMap = false;
+	AllowBuildingRepair = true;
+
 	Init();
+	Register_Event(DAEvent::LEVELLOADED, INT_MAX);
 	Register_Event(DAEvent::SETTINGSLOADED, INT_MAX);
 	Register_Event(DAEvent::CHAT, INT_MAX);
 	Register_Event(DAEvent::CONNECTIONREQUEST, INT_MAX);
 	Register_Event(DAEvent::RENLOG, INT_MAX);
+	Register_Object_Event(DAObjectEvent::DAMAGERECEIVEDREQUEST, DAObjectEvent::BUILDING);
 }
 
 EssentialsEventClass::~EssentialsEventClass() {
 	Instance = 0;
+}
+
+void EssentialsEventClass::Level_Loaded_Event() {
+	AllowBuildingRepair = true;
+	if (RestoreMap) {
+		Set_Map(RestoreMapName, Get_Current_Map_Index());
+		RestoreMap = false;
+	}
 }
 
 void EssentialsEventClass::Settings_Loaded_Event() {
@@ -217,6 +231,19 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	else {
 		if (EssentialsCustomTagClass::Instance) {
 			delete EssentialsCustomTagClass::Instance;
+		}
+	}
+
+	bool Voting = DASettingsManager::Get_Bool("Essentials", "EnableVoting", false);
+	if (Voting) {
+		if (!EssentialsVotingManagerClass::Instance) {
+			new EssentialsVotingManagerClass;
+			EssentialsVotingManagerClass::Instance->Settings_Loaded_Event();
+		}
+	}
+	else {
+		if (EssentialsVotingManagerClass::Instance) {
+			delete EssentialsVotingManagerClass::Instance;
 		}
 	}
 
@@ -486,6 +513,13 @@ void EssentialsEventClass::Ren_Log_Event(const char* Output) {
 			}
 		}
 	}
+}
+
+bool EssentialsEventClass::Damage_Request_Event(DamageableGameObj* Victim, ArmedGameObj* Damager, float& Damage, unsigned& Warhead, float Scale, DADamageType::Type Type) {
+	if (Type == DADamageType::REPAIR) {
+		return AllowBuildingRepair;
+	}
+	return true;
 }
 
 extern "C" {

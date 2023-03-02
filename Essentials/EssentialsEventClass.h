@@ -47,10 +47,21 @@ public:
 	EssentialsEventClass();
 	~EssentialsEventClass();
 
+	void Level_Loaded_Event() override;
 	void Settings_Loaded_Event() override;
 	bool Chat_Event(cPlayer* Player, TextMessageEnum Type, const wchar_t* Message, int ReceiverID) override;
 	ConnectionAcceptanceFilter::STATUS Connection_Request_Event(ConnectionRequest& Request, WideStringClass& RefusalMessage) override;
 	void Ren_Log_Event(const char* Output) override;
+	bool Damage_Request_Event(DamageableGameObj* Victim, ArmedGameObj* Damager, float& Damage, unsigned& Warhead, float Scale, DADamageType::Type Type) override;
+
+	void Set_Next_Map(StringClass mapName) {
+		int next = Get_Current_Map_Index() + 1;
+		if (next >= Get_Map_Count()) {
+			next = 0;
+		}
+		RestoreMapName = Get_Map(next);
+		RestoreMap = Set_Map(mapName, next);
+	}
 
 	CHATCMD_DECL_MT(Fly);                // !fly
 	CHATCMD_DECL_MT(Spectate);           // !spectate
@@ -85,6 +96,7 @@ public:
 	CHATCMD_DECL_ST(Sudo);               // !sudo
 	CHATCMD_DECL_ST(SudoTeam);           // !sudoteam
 
+	// General Settings
 	bool FloodingBlocksChatMessages;
 	bool ShowConnectionRequestMessages;
 	bool ShowConnectionLostMessages;
@@ -92,6 +104,13 @@ public:
 	StringClass ConnectionRequestMessageFormat;
 	StringClass ConnectionLostMessageFormat;
 
+	// Runtime Variables
+	bool RestoreMap;
+	StringClass RestoreMapName;
+
+	bool AllowBuildingRepair;
+
+	// Command Settings
 	float SpectateSpeed;
 
 	DynamicVectorClass<StringClass>* BlockedSpawnPresets;

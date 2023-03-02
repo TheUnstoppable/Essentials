@@ -41,6 +41,9 @@
     <ClCompile Include="EssentialsAutoAnnounce.cpp">
       <Filter>Features\Auto Announce</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsVoting.cpp">
+      <Filter>Features\Voting</Filter>
+    </ClCompile>
     <ClCompile Include="EssentialsCustomTag.cpp">
       <Filter>Features\Custom Tag</Filter>
     </ClCompile>
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="EssentialsAutoAnnounce.h">
       <Filter>Features\Auto Announce</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsVoting.h">
+      <Filter>Features\Voting</Filter>
     </ClInclude>
     <ClInclude Include="EssentialsCustomTag.h">
       <Filter>Features\Custom Tag</Filter>
@@ -126,6 +132,9 @@
     </Filter>
     <Filter Include="Features\Auto Announce">
       <UniqueIdentifier>{53aff38e-70d5-4b9d-ad77-960b5a84007e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Voting">
+      <UniqueIdentifier>{27ec3f33-dd45-43e4-b6f5-9547c8f71c47}</UniqueIdentifier>
     </Filter>
     <Filter Include="Features\Custom Tag">
       <UniqueIdentifier>{d2ad736d-f792-4233-a41f-bad07b522186}</UniqueIdentifier>
