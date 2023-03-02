@@ -246,6 +246,22 @@ Gets preset name and ID of command executor's or `target`'s player or vehicle ob
 <br /><br />
 
 
+### !sudo
+- **Alias(es)**: !sudo
+- **Usage**: !sudo \<target\> \[message\]
+
+Types the specified message as specified player in the public chat, triggering all Chat events.
+<br /><br />
+
+
+### !sudoteam
+- **Alias(es)**: !sudoteam, !sudot
+- **Usage**: !sudoteam \<target\> \[message\]
+
+Types the specified message as specified player in their team chat, triggering all Chat events.
+<br /><br />
+
+
 ### !togglegameplay
 - **Alias(es)**: !togglegameplay, !gameplay, !togglegp, !tgp, !sgp
 - **Usage**: !togglegameplay
