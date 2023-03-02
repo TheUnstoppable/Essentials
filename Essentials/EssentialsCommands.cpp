@@ -927,6 +927,7 @@ CHATCMD_DEF(EssentialsEventClass, Sudo) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
 	
 	if (Target) {
+		const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
 		StringClass Message = Text(2);
 		DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
 
@@ -942,6 +943,7 @@ CHATCMD_DEF(EssentialsEventClass, SudoTeam) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
 
 	if (Target) {
+		const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
 		StringClass Message = Text(2);
 		DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
 		
