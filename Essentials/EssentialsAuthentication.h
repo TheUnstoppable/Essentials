@@ -25,6 +25,7 @@ struct EssentialsAuthUser {
 };
 
 class EssentialsAuthClient {
+	friend class EssentialsAuthenticationManager;
 	friend class EssentialsAuthenticationHandler;
 
 public:
@@ -120,30 +121,10 @@ public:
 	static void Reload_Database();
 	static void Save_Database();
 	static void Cleanup_Database();
+	static bool Force_Authenticate_User(int Client);
 
-	static int Authenticate_User(int Client, const StringClass& Password);
-	static void Force_Authenticate_User(int Client);
-
-	//static EssentialsAuthUser* Add_Auth_User(cPlayer* Player, const StringClass& Password, int AccessLevel = 0) {
-	//	if (!Player) return NULL;
-	//	return Add_Auth_User(EssentialsAuthenticationHandler::Instance->Is_Authenticating(Player) ? EssentialsAuthenticationHandler::Instance->Get_Auth_Context(Player)->InitialNick : Player->Get_Name(), Password, AccessLevel);
-	//}
 	static EssentialsAuthUser* Add_Auth_User(const WideStringClass& PlayerName, const StringClass& Password, int AccessLevel = 0);;
-	//static EssentialsAuthUser* Get_Auth_User(cPlayer* Player) {
-	//	if (!Player) return NULL;
-	//	return Get_Auth_User(EssentialsAuthenticationHandler::Instance->Is_Authenticating(Player) ? EssentialsAuthenticationHandler::Instance->Get_Auth_Context(Player)->InitialNick : Player->Get_Name());
-	//}
 	static EssentialsAuthUser* Get_Auth_User(const WideStringClass& PlayerName);
-	//static bool Delete_Auth_User(cPlayer* Player) {
-	//	if (!Player) return false;
-	//	bool result = Delete_Auth_User(EssentialsAuthenticationHandler::Instance->Is_Authenticating(Player) ? EssentialsAuthenticationHandler::Instance->Get_Auth_Context(Player)->InitialNick : Player->Get_Name());
-	//	if (result) {
-	//		if (EssentialsAuthenticationHandler::Instance->Is_Authenticating(Player)) {
-	//			EssentialsAuthenticationHandler::Instance->Successfully_Authorized(Player);
-	//		}
-	//	}
-	//	return result;
-	//}
 	static bool Delete_Auth_User(const WideStringClass& PlayerName);
 
 private:
@@ -159,16 +140,16 @@ class EssentialsRegisterCommand : public ConsoleFunctionClass {
 	void Activate(const char* pArgs) override;
 };
 
-class EssentialsAuthCommand : public ConsoleFunctionClass {
-	const char* Get_Name(void) override { return "essentialsauth"; }
-	const char* Get_Alias(void) override { return "essauth"; }
-	const char* Get_Help(void) override { return "Authenticates given player ID with given password."; }
-	void Activate(const char* pArgs) override;
-};
-
 class EssentialsForceAuthCommand : public ConsoleFunctionClass {
 	const char* Get_Name(void) override { return "essentialsforceauth"; }
 	const char* Get_Alias(void) override { return "essfauth"; }
 	const char* Get_Help(void) override { return "Forcefully authenticates given player ID without password."; }
+	void Activate(const char* pArgs) override;
+};
+
+class EssentialsDeleteRegisterCommand : public ConsoleFunctionClass {
+	const char* Get_Name(void) override { return "essentialsdeleteregister"; }
+	const char* Get_Alias(void) override { return "essdelregister"; }
+	const char* Get_Help(void) override { return "Registers or updates password given name with given password and access level."; }
 	void Activate(const char* pArgs) override;
 };

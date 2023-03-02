@@ -340,6 +340,20 @@ void EssentialsAuthenticationManager::Cleanup_Database() {
 	}
 }
 
+bool EssentialsAuthenticationManager::Force_Authenticate_User(int Client) {
+	if (!Is_Initialized()) {
+		return false;
+	}
+
+	if (EssentialsAuthClient* AuthClient = EssentialsAuthenticationHandler::Instance->Get_Auth_Context(Client)) {
+		AuthClient->AuthState = 1;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 EssentialsAuthUser* EssentialsAuthenticationManager::Add_Auth_User(const WideStringClass& PlayerName, const StringClass& Password, int AccessLevel) {
 	if (!Is_Initialized()) {
 		return NULL;
@@ -557,4 +571,44 @@ void EssentialsRegisterCommand::Activate(const char* pArgs) {
 	}
 }
 
+void EssentialsForceAuthCommand::Activate(const char* pArgs) {
+	if (!EssentialsAuthenticationManager::Is_Initialized()) {
+		return;
+	}
+
+	int pId = atoi(pArgs);
+
+	if (pId > 0) {
+		if (EssentialsAuthenticationManager::Force_Authenticate_User(pId)) {
+			Console_Output("Client is successfully authorized.\n");
+		}
+		else {
+			Console_Output("Could not forcefully authorize the client.\n");
+		}
+	}
+	else {
+		Console_Output("Invalid usage. Parameters: \"<Player ID>\"\n");
+	}
+}
+
+void EssentialsDeleteRegisterCommand::Activate(const char* pArgs) {
+	if (!EssentialsAuthenticationManager::Is_Initialized()) {
+		return;
+	}
+
+	if (pArgs) {
+		if (EssentialsAuthenticationManager::Delete_Auth_User(pArgs)) {
+			Console_Output("Registration of player %s has been successfully deleted.\n", pArgs);
+		}
+		else {
+			Console_Output("Registration of player %s could not be found.\n", pArgs);
+		}
+	}
+	else {
+		Console_Output("Invalid usage. Parameters: \"<Name>\"\n");
+	}
+}
+
 Register_Console_Function(EssentialsRegisterCommand);
+Register_Console_Function(EssentialsForceAuthCommand);
+Register_Console_Function(EssentialsDeleteRegisterCommand);
