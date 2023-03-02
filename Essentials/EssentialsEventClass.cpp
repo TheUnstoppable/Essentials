@@ -145,6 +145,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 
 	EssentialsHologramsManager::Reinitialize_All_Holograms();
 
+
 	bool EnableAuthentication = DASettingsManager::Get_Bool("Essentials", "EnableAuthentication", false);
 	if (EnableAuthentication && !EssentialsAuthenticationManager::Is_Initialized()) {
 		EssentialsAuthenticationManager::Init();
@@ -154,6 +155,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 		EssentialsAuthenticationManager::Shutdown();
 		Console_Output("[Essentials] Authentication system is now disabled.\n");
 	}
+
 
 	bool BadWordFilter = DASettingsManager::Get_Bool("Essentials", "EnableBadWordFilter", false);
 	if (BadWordFilter) {
@@ -166,6 +168,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 			delete EssentialsBadWordFilterClass::Instance;
 		}
 	}
+
 
 	bool GruntEffect = DASettingsManager::Get_Bool("Essentials", "EnableGruntEffect", false);
 	if (GruntEffect) {
@@ -180,6 +183,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 		}
 	}
 
+
 	bool Jukebox = DASettingsManager::Get_Bool("Essentials", "EnableJukebox", false);
 	if (Jukebox) {
 		if (!EssentialsJukeboxClass::Instance) {
@@ -192,6 +196,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 			delete EssentialsJukeboxClass::Instance;
 		}
 	}
+
 
 	bool MapHolograms = DASettingsManager::Get_Bool("Essentials", "EnableMapHolograms", false);
 	if (MapHolograms) {
@@ -206,6 +211,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 		}
 	}
 
+
 	bool CustomPowerUpSpawners = DASettingsManager::Get_Bool("Essentials", "EnableCustomPowerUpSpawners", false);
 	if (CustomPowerUpSpawners) {
 		if (!EssentialsCustomPowerUpSpawnersClass::Instance) {
@@ -218,6 +224,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 			delete EssentialsCustomPowerUpSpawnersClass::Instance;
 		}
 	}
+
 
 	bool AutoAnnounce = DASettingsManager::Get_Bool("Essentials", "EnableAutoAnnounce", false);
 	if (AutoAnnounce) {
@@ -232,6 +239,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 		}
 	}
 
+
 	bool CustomTag = DASettingsManager::Get_Bool("Essentials", "EnableCustomTag", false);
 	if (CustomTag) {
 		if (!EssentialsCustomTagClass::Instance) {
@@ -244,6 +252,7 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 			delete EssentialsCustomTagClass::Instance;
 		}
 	}
+
 
 	bool Voting = DASettingsManager::Get_Bool("Essentials", "EnableVoting", false);
 	if (Voting) {
@@ -543,14 +552,12 @@ bool EssentialsEventClass::Damage_Request_Event(DamageableGameObj* Victim, Armed
 }
 
 extern "C" {
-	_declspec(dllexport) void Plugin_Init() {
+	__declspec(dllexport) void Plugin_Init() {
 		new EssentialsEventClass;
 		DASettingsManager::Add_Settings("Essentials.ini");
 	}
 
-	_declspec(dllexport) void Plugin_Shutdown() {
-		if (EssentialsEventClass::Instance) {
-			delete EssentialsEventClass::Instance;
-		}
+	__declspec(dllexport) void Plugin_Shutdown() {
+		delete EssentialsEventClass::Instance;
 	}
 }
