@@ -265,6 +265,18 @@ FileClass* Create_Or_Get_Essentials_Data_File(StringClass name, int mode) {
 	return 0;
 }
 
+bool Ensure_Essentials_Data_Folder_Exists(StringClass name) {
+	if (!(CreateDirectory("EssentialsData", NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) {
+		return false;
+	}
+
+	if (!(CreateDirectory(StringFormat("EssentialsData\\%s", name), NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) {
+		return false;
+	}
+
+	return true;
+}
+
 bool String_Contains(StringClass first, StringClass second) {
 	int firstLen = first.Get_Length();
 	int secondLen = second.Get_Length();

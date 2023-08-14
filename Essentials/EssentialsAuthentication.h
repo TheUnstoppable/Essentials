@@ -12,9 +12,9 @@
 
 #include "EssentialsEventClass.h"
 
-#define CREDENTIALS_DATABASE_FILENAME "EssCredsDB.dat"
-#define CREDENTIALS_DATABASE_DBID 0x42444345
-#define CREDENTIALS_DATABASE_USERID 0x32
+#define CREDENTIALS_DBNAME "credentials.dat"
+#define CREDENTIALS_DBHEADER 0x42444345
+#define CREDENTIALS_USERHEADER 0x32
 
 class EssentialsAuthenticationManager;
 

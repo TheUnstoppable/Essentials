@@ -18,4 +18,5 @@ extern StringClass Format_Seconds(int Seconds, bool AppendUnit = true);
 extern StringClass Format_Seconds_Friendly(int Seconds);
 extern bool Get_MD5_Hash(StringClass text, StringClass& out);
 extern FileClass* Create_Or_Get_Essentials_Data_File(StringClass name, int mode = 0);
+extern bool Ensure_Essentials_Data_Folder_Exists(StringClass name);
 extern bool String_Contains(StringClass first, StringClass second);

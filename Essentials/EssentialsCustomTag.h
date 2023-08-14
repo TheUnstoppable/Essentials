@@ -11,6 +11,7 @@
 #pragma once
 #include "da_event.h"
 
+#define CUSTOMTAG_DBNAME "tags.dat"
 #define CUSTOMTAG_DBVERSION (char)1
 #define CUSTOMTAG_DATAHEADER 0x47415445U
 #define CUSTOMTAG_DATAENTRY (char)1

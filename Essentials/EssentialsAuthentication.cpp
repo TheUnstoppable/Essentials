@@ -274,16 +274,19 @@ void EssentialsAuthenticationManager::Reload_Database() {
 
 	Cleanup_Database();
 
-	RawFileClass file(CREDENTIALS_DATABASE_FILENAME);
-	file.Open(0);
-	ChunkLoadClass loader(&file);
-	
+	FileClass* file = Create_Or_Get_Essentials_Data_File(CREDENTIALS_DBNAME);
+	if (!file) {
+		Console_Output("[Essentials] Failed to open credentials database for reading.\n");
+		return;
+	}
+
+	ChunkLoadClass loader(file);
 	while (loader.Open_Chunk()) {
 		switch (loader.Cur_Chunk_ID()) {
-			case CREDENTIALS_DATABASE_DBID: {
+			case CREDENTIALS_DBHEADER: {
 				while (loader.Open_Micro_Chunk()) {
 					switch (loader.Cur_Micro_Chunk_ID()) {
-						case CREDENTIALS_DATABASE_USERID: {
+						case CREDENTIALS_USERHEADER: {
 							EssentialsAuthUser* AuthUser = new EssentialsAuthUser;
 
 							int nickLen = 0;

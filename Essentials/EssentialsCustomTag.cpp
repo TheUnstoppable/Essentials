@@ -145,7 +145,7 @@ void EssentialsCustomTagClass::Clear_Tags() {
 void EssentialsCustomTagClass::Load_Tags() {
 	Clear_Tags();
 
-	FileClass* file = Create_Or_Get_Essentials_Data_File("tags.dat");
+	FileClass* file = Create_Or_Get_Essentials_Data_File(CUSTOMTAG_DBNAME);
 	if (!file) {
 		Console_Output("[Essentials] Failed to open custom tag database for reading.\n");
 		return;
@@ -196,7 +196,7 @@ void EssentialsCustomTagClass::Load_Tags() {
 }
 
 void EssentialsCustomTagClass::Save_Tags() {
-	FileClass* file = Create_Or_Get_Essentials_Data_File("tags.dat", 2);
+	FileClass* file = Create_Or_Get_Essentials_Data_File(CUSTOMTAG_DBNAME, 2);
 	if (!file) {
 		Console_Output("[Essentials] Failed to open custom tag database for reading.\n");
 		return;
