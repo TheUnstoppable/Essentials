@@ -230,7 +230,6 @@ CHATCMD_DEF(EssentialsEventClass, GiveMoney) {
 
 CHATCMD_DEF(EssentialsEventClass, GoTo) {
 	cPlayer* Target = Match_Player(Player, Text[0], false, true);
-	if(!Target) return false;
 
 	if (Target) {
 		if (Teleport_Player(Player, Target)) {
