@@ -230,13 +230,12 @@ CHATCMD_DEF(EssentialsEventClass, GiveMoney) {
 
 CHATCMD_DEF(EssentialsEventClass, GoTo) {
 	cPlayer* Target = Match_Player(Player, Text[0], false, true);
+	if (!Target) return false;
 
-	if (Target) {
-		if (Teleport_Player(Player, Target)) {
-			DA::Page_Player(Player, "You've successfully teleported to %ws's location.", Target->Get_Name().Peek_Buffer());
-		} else {
-			DA::Page_Player(Player, "Could not teleport you to %ws's location.", Target->Get_Name().Peek_Buffer());
-		}
+	if (Teleport_Player(Player, Target)) {
+		DA::Page_Player(Player, "You've successfully teleported to %ws's location.", Target->Get_Name().Peek_Buffer());
+	} else {
+		DA::Page_Player(Player, "Could not teleport you to %ws's location.", Target->Get_Name().Peek_Buffer());
 	}
 
 	return false;
@@ -967,31 +966,31 @@ CHATCMD_DEF(EssentialsEventClass, GetPresetName) {
 
 CHATCMD_DEF(EssentialsEventClass, Sudo) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
-    if(!Target) return false;
+	if(!Target) return false;
 
-    const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
-    StringClass Message = Text(2);
-    DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+	const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+	StringClass Message = Text(2);
+	DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
 
-    WideStringClass WideMessage(Message);
-    if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_PUBLIC, WideMessage, -1)) {
-        Send_Client_Text(WideMessage, TEXT_MESSAGE_PUBLIC, false, Target->Get_Id(), -1, true, true);
-    }
+	WideStringClass WideMessage(Message);
+	if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_PUBLIC, WideMessage, -1)) {
+		Send_Client_Text(WideMessage, TEXT_MESSAGE_PUBLIC, false, Target->Get_Id(), -1, true, true);
+	}
 	return false;
 }
 
 CHATCMD_DEF(EssentialsEventClass, SudoTeam) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
-    if(!Target) return false;
+	if(!Target) return false;
 
-    const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
-    StringClass Message = Text(2);
-    DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+	const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+	StringClass Message = Text(2);
+	DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
 
-    WideStringClass WideMessage(Message);
-    if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_TEAM, WideMessage, -1)) {
-        Send_Client_Text(WideMessage, TEXT_MESSAGE_TEAM, false, Target->Get_Id(), -1, true, true);
-    }
+	WideStringClass WideMessage(Message);
+	if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_TEAM, WideMessage, -1)) {
+		Send_Client_Text(WideMessage, TEXT_MESSAGE_TEAM, false, Target->Get_Id(), -1, true, true);
+	}
 	return false;
 }
 
@@ -1009,10 +1008,9 @@ CHATCMD_DEF(EssentialsEventClass, ReloadLevel) {
 
 CHATCMD_DEF(EssentialsEventClass, ReloadClient) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
+	if (!Target) return false;
 
-	if (Target) {
-		Force_Client_Reload(Target->Get_Id());
-		DA::Page_Player(Player, "Forcing %ws's client to reload the current level.", Target->Get_Name());
-	}
+	Force_Client_Reload(Target->Get_Id());
+	DA::Page_Player(Player, "Forcing %ws's client to reload the current level.", Target->Get_Name());
 	return false;
 }
