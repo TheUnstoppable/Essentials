@@ -50,6 +50,9 @@
     <ClCompile Include="EssentialsCustomTag.cpp">
       <Filter>Features\Custom Tag</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsSnipingGameModeClass.cpp">
+      <Filter>Game Modes\Sniping</Filter>
+    </ClCompile>
     <ClCompile Include="EssentialsFileIterator.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -101,6 +104,9 @@
     <ClInclude Include="EssentialsCustomTag.h">
       <Filter>Features\Custom Tag</Filter>
     </ClInclude>
+    <ClInclude Include="EssentialsSnipingGameModeClass.h">
+      <Filter>Game Modes\Sniping</Filter>
+    </ClInclude>
     <ClInclude Include="EssentialsFileIterator.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -150,6 +156,9 @@
     </Filter>
     <Filter Include="Features\Custom Tag">
       <UniqueIdentifier>{d2ad736d-f792-4233-a41f-bad07b522186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Modes\Sniping">
+      <UniqueIdentifier>{562c465f-31b5-497c-bb78-00cfd36356b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

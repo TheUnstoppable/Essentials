@@ -205,6 +205,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClCompile Include="EssentialsPlayerDataClass.cpp" />
     <ClCompile Include="EssentialsEventClass.cpp" />
     <ClCompile Include="EssentialsCommands.cpp" />
+    <ClCompile Include="EssentialsSnipingGameModeClass.cpp" />
     <ClCompile Include="EssentialsUtils.cpp" />
     <ClCompile Include="EssentialsVoting.cpp" />
     <ClCompile Include="General.cpp">
@@ -229,6 +230,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsMapHolograms.h" />
     <ClInclude Include="EssentialsPlayerDataClass.h" />
     <ClInclude Include="EssentialsEventClass.h" />
+    <ClInclude Include="EssentialsSnipingGameModeClass.h" />
     <ClInclude Include="EssentialsUtils.h" />
     <ClInclude Include="EssentialsVoting.h" />
     <ClInclude Include="General.h" />
