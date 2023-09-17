@@ -315,6 +315,7 @@ void EssentialsAuthenticationManager::Reload_Database() {
 		}
 		loader.Close_Chunk();
 	}
+	delete file;
 }
 
 void EssentialsAuthenticationManager::Save_Database() {
@@ -322,17 +323,16 @@ void EssentialsAuthenticationManager::Save_Database() {
 		return;
 	}
 
-	RawFileClass file(CREDENTIALS_DATABASE_FILENAME);
-	if (!file.Open(2)) {
-		Console_Output("[Essentials] Failed to write credentials database for Authentication System.\n");
+	FileClass* file = Create_Or_Get_Essentials_Data_File(CREDENTIALS_DBNAME);
+	if (!file) {
+		Console_Output("[Essentials] Failed to open credentials database for writing.\n");
 		return;
 	}
 
-	ChunkSaveClass saver(&file);
-
-	saver.Begin_Chunk(CREDENTIALS_DATABASE_DBID);
+	ChunkSaveClass saver(file);
+	saver.Begin_Chunk(CREDENTIALS_DBHEADER);
 	for (SLNode<EssentialsAuthUser>* n = ProtectedUsers.Head(); n; n = n->Next()) {
-		saver.Begin_Micro_Chunk(CREDENTIALS_DATABASE_USERID);
+		saver.Begin_Micro_Chunk(CREDENTIALS_USERHEADER);
 		int len = n->Data()->Nick.Get_Length();
 		saver.SimpleWrite(len);
 		saver.Write(n->Data()->Nick.Peek_Buffer(), len * 2);
@@ -341,7 +341,7 @@ void EssentialsAuthenticationManager::Save_Database() {
 		saver.End_Micro_Chunk();
 	}
 	saver.End_Chunk();
-	file.Close();
+	delete file;
 }
 
 void EssentialsAuthenticationManager::Cleanup_Database() {
