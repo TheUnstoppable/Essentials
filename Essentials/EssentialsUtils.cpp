@@ -117,10 +117,10 @@ bool Teleport_Player(cPlayer* Player, cPlayer* Target) {
 
 	if (SourceObject && TargetObject) {
 		Commands->Set_Position(SourceObject, Commands->Get_Position(TargetObject));
-		if (!SourceObject->Peek_Physical_Object()->Is_Immovable()) {
+		if (SourceObject->Peek_Physical_Object()->As_MoveablePhysClass()) {
 			Fix_Stuck_Object(SourceObject, 5.f);
 		}
-		if (!TargetObject->Peek_Physical_Object()->Is_Immovable()) {
+		if (TargetObject->Peek_Physical_Object()->As_MoveablePhysClass()) {
 			Fix_Stuck_Object(TargetObject, 5.f);
 		}
 		return true;
