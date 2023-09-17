@@ -151,6 +151,6 @@ class EssentialsForceAuthCommand : public ConsoleFunctionClass {
 class EssentialsDeleteRegisterCommand : public ConsoleFunctionClass {
 	const char* Get_Name(void) override { return "essentialsdeleteregister"; }
 	const char* Get_Alias(void) override { return "essdelregister"; }
-	const char* Get_Help(void) override { return "Registers or updates password given name with given password and access level."; }
+	const char* Get_Help(void) override { return "Deletes registration of the given name."; }
 	void Activate(const char* pArgs) override;
 };
