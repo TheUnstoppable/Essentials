@@ -115,6 +115,7 @@ private:
 
 class ESSENTIALS_API EssentialsAuthenticationManager {
 public:
+	static void Pre_Init();
 	static void Init();
 	static void Shutdown();
 	static bool Is_Initialized();

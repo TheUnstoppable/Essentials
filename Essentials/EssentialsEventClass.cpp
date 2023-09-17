@@ -558,6 +558,7 @@ bool EssentialsEventClass::Damage_Request_Event(DamageableGameObj* Victim, Armed
 extern "C" {
 	__declspec(dllexport) void Plugin_Init() {
 		new EssentialsEventClass;
+		EssentialsAuthenticationManager::Pre_Init();
 		DASettingsManager::Add_Settings("Essentials.ini");
 	}
 

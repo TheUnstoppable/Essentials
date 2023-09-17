@@ -33,7 +33,6 @@ EssentialsAuthenticationHandler::EssentialsAuthenticationHandler() {
 	Register_Event(DAEvent::CONNECTIONREQUEST, INT_MAX);
 	Register_Event(DAEvent::PLAYERJOIN, 1);
 
-	addConnectionAcceptanceFilter(&filter);
 	AuthMessage = "{PLAYER} is {LEVEL}.";
 	AllowRegisteredOnly = false;
 	DialogHookID = AddDialogHook(EssentialsAuthenticationHandler::Dialog_Event);
@@ -111,6 +110,10 @@ void EssentialsAuthenticationHandler::EssentialsAuthenticationFilter::handleTerm
 }
 
 ConnectionAcceptanceFilter::STATUS EssentialsAuthenticationHandler::EssentialsAuthenticationFilter::getStatus(const ConnectionRequest& constRequest, WideStringClass& refusalMessage) {
+	if (!EssentialsAuthenticationManager::Is_Initialized()) {
+		return The_Game() && The_Game()->Is_Gameplay_Permitted() ? STATUS_ACCEPTING : STATUS_INDETERMINATE;
+	}
+
 	ConnectionRequest& Request = const_cast<ConnectionRequest&>(constRequest);
 
 	if (EssentialsAuthClient* AuthContext = Instance->Get_Auth_Context(Request)) {
@@ -248,6 +251,11 @@ int EssentialsAuthenticationHandler::Do_Password_Validation(EssentialsAuthClient
 int EssentialsAuthenticationHandler::Do_Leave(EssentialsAuthClient* AuthContext) {
 	AuthContext->AuthState = 4;
 	return 1;
+}
+
+void EssentialsAuthenticationManager::Pre_Init() {
+	// Add connection acceptance filter before all, so people can't slide into the server before Essentials can handle them.
+	addConnectionAcceptanceFilter(&filter);
 }
 
 void EssentialsAuthenticationManager::Init() {
