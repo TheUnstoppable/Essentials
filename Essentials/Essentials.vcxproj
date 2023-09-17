@@ -193,6 +193,11 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClCompile Include="EssentialsAuthentication.cpp" />
     <ClCompile Include="EssentialsAutoAnnounce.cpp" />
     <ClCompile Include="EssentialsBadWordFilter.cpp" />
+    <ClCompile Include="EssentialsCMSView.cpp" />
+    <ClCompile Include="EssentialsCMSDefinition.cpp" />
+    <ClCompile Include="EssentialsCMSManager.cpp" />
+    <ClCompile Include="EssentialsCMSReader.cpp" />
+    <ClCompile Include="EssentialsCMSUtils.cpp" />
     <ClCompile Include="EssentialsCrateInjector.cpp" />
     <ClCompile Include="EssentialsCustomPowerUpSpawners.cpp" />
     <ClCompile Include="EssentialsCustomTag.cpp" />
@@ -219,6 +224,11 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsAuthentication.h" />
     <ClInclude Include="EssentialsAutoAnnounce.h" />
     <ClInclude Include="EssentialsBadWordFilter.h" />
+    <ClInclude Include="EssentialsCMSView.h" />
+    <ClInclude Include="EssentialsCMSDefinition.h" />
+    <ClInclude Include="EssentialsCMSManager.h" />
+    <ClInclude Include="EssentialsCMSReader.h" />
+    <ClInclude Include="EssentialsCMSUtils.h" />
     <ClInclude Include="EssentialsCrateInjector.h" />
     <ClInclude Include="EssentialsCustomPowerUpSpawners.h" />
     <ClInclude Include="EssentialsCustomTag.h" />

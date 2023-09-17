@@ -26,9 +26,6 @@
     <ClCompile Include="EssentialsJukebox.cpp">
       <Filter>Features\Jukebox</Filter>
     </ClCompile>
-    <ClCompile Include="EssentialsHolograms.cpp">
-      <Filter>API</Filter>
-    </ClCompile>
     <ClCompile Include="EssentialsMapHolograms.cpp">
       <Filter>Features\Map Holograms</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
     <ClCompile Include="EssentialsAutoAnnounce.cpp">
       <Filter>Features\Auto Announce</Filter>
     </ClCompile>
-    <ClCompile Include="EssentialsAuthentication.cpp">
-      <Filter>API</Filter>
-    </ClCompile>
     <ClCompile Include="EssentialsVoting.cpp">
       <Filter>Features\Voting</Filter>
     </ClCompile>
@@ -53,8 +47,29 @@
     <ClCompile Include="EssentialsSnipingGameModeClass.cpp">
       <Filter>Game Modes\Sniping</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsAuthentication.cpp">
+      <Filter>API\Authentication</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsHolograms.cpp">
+      <Filter>API\Holograms</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsCMSManager.cpp">
+      <Filter>API\Content Management System</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsCMSReader.cpp">
+      <Filter>API\Content Management System</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsCMSDefinition.cpp">
+      <Filter>API\Content Management System</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsCMSView.cpp">
+      <Filter>API\Content Management System</Filter>
+    </ClCompile>
     <ClCompile Include="EssentialsFileIterator.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EssentialsCMSUtils.cpp">
+      <Filter>API\Content Management System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,9 +95,6 @@
     <ClInclude Include="EssentialsJukebox.h">
       <Filter>Features\Jukebox</Filter>
     </ClInclude>
-    <ClInclude Include="EssentialsHolograms.h">
-      <Filter>API</Filter>
-    </ClInclude>
     <ClInclude Include="EssentialsMapHolograms.h">
       <Filter>Features\Map Holograms</Filter>
     </ClInclude>
@@ -95,9 +107,6 @@
     <ClInclude Include="EssentialsAutoAnnounce.h">
       <Filter>Features\Auto Announce</Filter>
     </ClInclude>
-    <ClInclude Include="EssentialsAuthentication.h">
-      <Filter>API</Filter>
-    </ClInclude>
     <ClInclude Include="EssentialsVoting.h">
       <Filter>Features\Voting</Filter>
     </ClInclude>
@@ -107,8 +116,29 @@
     <ClInclude Include="EssentialsSnipingGameModeClass.h">
       <Filter>Game Modes\Sniping</Filter>
     </ClInclude>
+    <ClInclude Include="EssentialsAuthentication.h">
+      <Filter>API\Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsHolograms.h">
+      <Filter>API\Holograms</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCMSManager.h">
+      <Filter>API\Content Management System</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCMSDefinition.h">
+      <Filter>API\Content Management System</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCMSView.h">
+      <Filter>API\Content Management System</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCMSReader.h">
+      <Filter>API\Content Management System</Filter>
+    </ClInclude>
     <ClInclude Include="EssentialsFileIterator.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsCMSUtils.h">
+      <Filter>API\Content Management System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +189,15 @@
     </Filter>
     <Filter Include="Game Modes\Sniping">
       <UniqueIdentifier>{562c465f-31b5-497c-bb78-00cfd36356b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API\Authentication">
+      <UniqueIdentifier>{d3bcb9f6-da62-4a31-83f6-d05123cc6fbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API\Holograms">
+      <UniqueIdentifier>{5037e6a8-7884-4220-b92c-2e41fa5ad192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API\Content Management System">
+      <UniqueIdentifier>{ac153a44-bae9-42f5-8c0d-53136b109a72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

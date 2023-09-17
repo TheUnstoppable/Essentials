@@ -35,6 +35,9 @@
 #include "EssentialsAuthentication.h"
 #include "EssentialsCustomTag.h"
 #include "EssentialsVoting.h"
+#include "EssentialsFreeForAllGameModeClass.h"
+#include "EssentialsSnipingGameModeClass.h"
+#include "EssentialsCMSManager.h"
 
 EssentialsEventClass* EssentialsEventClass::Instance = 0;
 
@@ -154,6 +157,17 @@ void EssentialsEventClass::Settings_Loaded_Event() {
 	else if (!EnableAuthentication && EssentialsAuthenticationManager::Is_Initialized()) {
 		EssentialsAuthenticationManager::Shutdown();
 		Console_Output("[Essentials] Authentication system is now disabled.\n");
+	}
+
+
+	bool EnableCMS = DASettingsManager::Get_Bool("Essentials", "EnableCMS", false);
+	if (EnableCMS && !EssentialsCMSManager::Is_Initialized()) {
+		EssentialsCMSManager::Init();
+		Console_Output("[Essentials] CMS is now enabled.\n");
+	}
+	else if (!EnableCMS && EssentialsCMSManager::Is_Initialized()) {
+		EssentialsCMSManager::Shutdown();
+		Console_Output("[Essentials] CMS is now disabled.\n");
 	}
 
 
