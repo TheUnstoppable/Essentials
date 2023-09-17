@@ -196,6 +196,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClCompile Include="EssentialsCrateInjector.cpp" />
     <ClCompile Include="EssentialsCustomPowerUpSpawners.cpp" />
     <ClCompile Include="EssentialsCustomTag.cpp" />
+    <ClCompile Include="EssentialsFileIterator.cpp" />
     <ClCompile Include="EssentialsFreeForAllGameModeClass.cpp" />
     <ClCompile Include="EssentialsGruntEffect.cpp" />
     <ClCompile Include="EssentialsHolograms.cpp" />
@@ -220,6 +221,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsCrateInjector.h" />
     <ClInclude Include="EssentialsCustomPowerUpSpawners.h" />
     <ClInclude Include="EssentialsCustomTag.h" />
+    <ClInclude Include="EssentialsFileIterator.h" />
     <ClInclude Include="EssentialsFreeForAllGameModeClass.h" />
     <ClInclude Include="EssentialsGruntEffect.h" />
     <ClInclude Include="EssentialsHolograms.h" />
