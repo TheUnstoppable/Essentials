@@ -967,33 +967,31 @@ CHATCMD_DEF(EssentialsEventClass, GetPresetName) {
 
 CHATCMD_DEF(EssentialsEventClass, Sudo) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
+    if(!Target) return false;
 
-	if (Target) {
-		const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
-		StringClass Message = Text(2);
-		DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+    const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+    StringClass Message = Text(2);
+    DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
 
-		WideStringClass WideMessage(Message);
-		if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_PUBLIC, WideMessage, -1)) {
-			Send_Client_Text(WideMessage, TEXT_MESSAGE_PUBLIC, false, Target->Get_Id(), -1, true, true);
-		}
-	}
+    WideStringClass WideMessage(Message);
+    if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_PUBLIC, WideMessage, -1)) {
+        Send_Client_Text(WideMessage, TEXT_MESSAGE_PUBLIC, false, Target->Get_Id(), -1, true, true);
+    }
 	return false;
 }
 
 CHATCMD_DEF(EssentialsEventClass, SudoTeam) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
+    if(!Target) return false;
 
-	if (Target) {
-		const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
-		StringClass Message = Text(2);
-		DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+    const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+    StringClass Message = Text(2);
+    DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
 
-		WideStringClass WideMessage(Message);
-		if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_TEAM, WideMessage, -1)) {
-			Send_Client_Text(WideMessage, TEXT_MESSAGE_TEAM, false, Target->Get_Id(), -1, true, true);
-		}
-	}
+    WideStringClass WideMessage(Message);
+    if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_TEAM, WideMessage, -1)) {
+        Send_Client_Text(WideMessage, TEXT_MESSAGE_TEAM, false, Target->Get_Id(), -1, true, true);
+    }
 	return false;
 }
 
