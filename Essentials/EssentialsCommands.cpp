@@ -27,6 +27,8 @@
 
 CHATCMD_DEF(EssentialsEventClass, Fly) {
 	cPlayer *Target = CAN_MANAGE_OTHERS(Fly, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	EssentialsPlayerDataClass* Data = Get_Player_Data(Target);
 	if (Data->Set_IsFlying(!Data->Get_IsFlying())) {
 		if (Data->Get_IsFlying()) {
@@ -47,6 +49,8 @@ CHATCMD_DEF(EssentialsEventClass, Fly) {
 
 CHATCMD_DEF(EssentialsEventClass, Spectate) {
 	cPlayer *Target = CAN_MANAGE_OTHERS(Spectate, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	EssentialsPlayerDataClass *Data = Get_Player_Data(Target);
 	if (Data->Get_IsSpectating()) {
 		if (Data->Set_IsSpectating(false)) {
@@ -97,6 +101,8 @@ CHATCMD_DEF(EssentialsEventClass, SpawnObject) {
 
 CHATCMD_DEF(EssentialsEventClass, ChangeCharacter) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(ChangeCharacter, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	StringClass Preset = Text.Size() >= 2 ? Text[2] : Text[0];
 	if (BlockedCharacterPresets->ID(Preset) == -1) {
 		DefinitionClass* Def = Find_Named_Definition(Preset.Peek_Buffer());
@@ -124,6 +130,8 @@ CHATCMD_DEF(EssentialsEventClass, ChangeCharacter) {
 
 CHATCMD_DEF(EssentialsEventClass, GiveWeapon) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GiveWeapon, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	StringClass Preset = Text.Size() >= 2 ? Text[2] : Text[0];
 	if (BlockedWeaponPresets->ID(Preset) == -1) {
 		DefinitionClass* Def = Find_Named_Definition(Preset.Peek_Buffer());
@@ -198,6 +206,8 @@ CHATCMD_DEF(EssentialsEventClass, FastSpawn) {
 
 CHATCMD_DEF(EssentialsEventClass, GiveMoney) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GiveMoney, Player) ? DECIDE_TARGET(2, 1): Player;
+	if(!Target) return false;
+
 	float amount = .0f;
 	
 	if (Text.As_Float(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -249,6 +259,8 @@ CHATCMD_DEF(EssentialsEventClass, Put) {
 
 CHATCMD_DEF(EssentialsEventClass, PutAll) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GetPosition, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	VehicleElseSoldier(TargetObject, Target);
 
 	if (TargetObject) {
@@ -287,6 +299,8 @@ CHATCMD_DEF(EssentialsEventClass, PutAll) {
 
 CHATCMD_DEF(EssentialsEventClass, PutAllLine) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GetPosition, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	VehicleElseSoldier(TargetObject, Target);
 
 	if (TargetObject) {
@@ -336,6 +350,8 @@ CHATCMD_DEF(EssentialsEventClass, PutAllLine) {
 
 CHATCMD_DEF(EssentialsEventClass, PutAllCircle) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GetPosition, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	VehicleElseSoldier(TargetObject, Target);
 
 	if (TargetObject) {
@@ -400,6 +416,8 @@ CHATCMD_DEF(EssentialsEventClass, PutAllCircle) {
 
 CHATCMD_DEF(EssentialsEventClass, SetHealth) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetHealth, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	float amount = .0f;
 
 	if (Text.As_Float(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -432,6 +450,8 @@ CHATCMD_DEF(EssentialsEventClass, SetHealth) {
 
 CHATCMD_DEF(EssentialsEventClass, SetArmor) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetArmor, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	float amount = .0f;
 
 	if (Text.As_Float(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -464,6 +484,8 @@ CHATCMD_DEF(EssentialsEventClass, SetArmor) {
 
 CHATCMD_DEF(EssentialsEventClass, SetMaxHealth) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetMaxHealth, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	float amount = .0f;
 
 	if (Text.As_Float(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -496,6 +518,8 @@ CHATCMD_DEF(EssentialsEventClass, SetMaxHealth) {
 
 CHATCMD_DEF(EssentialsEventClass, SetMaxArmor) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetMaxArmor, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	float amount = .0f;
 
 	if (Text.As_Float(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -528,6 +552,8 @@ CHATCMD_DEF(EssentialsEventClass, SetMaxArmor) {
 
 CHATCMD_DEF(EssentialsEventClass, SetClipAmmo) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetClipAmmo, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	int amount = 0;
 
 	if (Text.As_Int(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -561,6 +587,8 @@ CHATCMD_DEF(EssentialsEventClass, SetClipAmmo) {
 
 CHATCMD_DEF(EssentialsEventClass, SetInventoryAmmo) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetInventoryAmmo, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	int amount = 0;
 
 	if (Text.As_Int(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -594,6 +622,8 @@ CHATCMD_DEF(EssentialsEventClass, SetInventoryAmmo) {
 
 CHATCMD_DEF(EssentialsEventClass, SetObjectTeam) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetObjectTeam, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	int team = Target->Get_Player_Type();
 
 	if (Text.As_Int(Text.Size() >= 2 ? 2 : 1, team)) {
@@ -700,6 +730,8 @@ CHATCMD_DEF(EssentialsEventClass, ChangeModel) {
 	StringClass Model = Text.Size() > 1 ? Text[2] : Text[0];
 	if (BlockedModels->ID(Model) == -1) {
 		cPlayer* Target = CAN_MANAGE_OTHERS(ChangeModel, Player) ? DECIDE_TARGET(2, 1) : Player;
+		if(!Target) return false;
+
 		VehicleElseSoldier(TargetObject, Target);
 
 		if (TargetObject) {
@@ -729,6 +761,8 @@ CHATCMD_DEF(EssentialsEventClass, ChangeModel) {
 
 CHATCMD_DEF(EssentialsEventClass, GetPosition) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GetPosition, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	VehicleElseSoldier(TargetObject, Target);
 
 	if (TargetObject) {
@@ -756,6 +790,8 @@ CHATCMD_DEF(EssentialsEventClass, GetPosition) {
 
 CHATCMD_DEF(EssentialsEventClass, SetSpeed) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(SetSpeed, Player) ? DECIDE_TARGET(2, 1) : Player;
+	if(!Target) return false;
+
 	float amount = .0f;
 
 	if (Text.As_Float(Text.Size() >= 2 ? 2 : 1, amount)) {
@@ -823,6 +859,8 @@ CHATCMD_DEF(EssentialsEventClass, ReviveBuilding) {
 
 CHATCMD_DEF(EssentialsEventClass, GodMode) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GodMode, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	SoldierGameObj* Soldier = Target->Get_GameObj();
 	
 	Soldier->Re_Init((SoldierGameObjDef&)*Find_Named_Definition(GodModePreset.Peek_Buffer()));
@@ -865,6 +903,8 @@ CHATCMD_DEF(EssentialsEventClass, Screenshot) {
 
 CHATCMD_DEF(EssentialsEventClass, GetModelName) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GetModelName, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	VehicleElseSoldier(TargetObject, Target);
 
 	if (TargetObject) {
@@ -895,6 +935,8 @@ CHATCMD_DEF(EssentialsEventClass, GetModelName) {
 
 CHATCMD_DEF(EssentialsEventClass, GetPresetName) {
 	cPlayer* Target = CAN_MANAGE_OTHERS(GetModelName, Player) ? DECIDE_TARGET(1, 1) : Player;
+	if(!Target) return false;
+
 	VehicleElseSoldier(TargetObject, Target);
 
 	if (TargetObject) {
@@ -925,33 +967,31 @@ CHATCMD_DEF(EssentialsEventClass, GetPresetName) {
 
 CHATCMD_DEF(EssentialsEventClass, Sudo) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
-	
-	if (Target) {
-		const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
-		StringClass Message = Text(2);
-		DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+    if(!Target) return false;
 
-		WideStringClass WideMessage(Message);
-		if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_PUBLIC, WideMessage, -1)) {
-			Send_Client_Text(WideMessage, TEXT_MESSAGE_PUBLIC, false, Target->Get_Id(), -1, true, true);
-		}
-	}
+    const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+    StringClass Message = Text(2);
+    DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+
+    WideStringClass WideMessage(Message);
+    if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_PUBLIC, WideMessage, -1)) {
+        Send_Client_Text(WideMessage, TEXT_MESSAGE_PUBLIC, false, Target->Get_Id(), -1, true, true);
+    }
 	return false;
 }
 
 CHATCMD_DEF(EssentialsEventClass, SudoTeam) {
 	cPlayer* Target = Match_Player(Player, Text[1], false, true);
+    if(!Target) return false;
 
-	if (Target) {
-		const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
-		StringClass Message = Text(2);
-		DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
-		
-		WideStringClass WideMessage(Message);
-		if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_TEAM, WideMessage, -1)) {
-			Send_Client_Text(WideMessage, TEXT_MESSAGE_TEAM, false, Target->Get_Id(), -1, true, true);
-		}
-	}
+    const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+    StringClass Message = Text(2);
+    DA::Page_Player(Player, "Forcing %ws to type: %s", Target->Get_Name(), Message);
+
+    WideStringClass WideMessage(Message);
+    if (DAEventManager::Chat_Event(Target, TEXT_MESSAGE_TEAM, WideMessage, -1)) {
+        Send_Client_Text(WideMessage, TEXT_MESSAGE_TEAM, false, Target->Get_Id(), -1, true, true);
+    }
 	return false;
 }
 
