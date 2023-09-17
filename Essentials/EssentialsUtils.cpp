@@ -235,6 +235,7 @@ bool Get_MD5_Hash(StringClass text, StringClass& out) {
 
 	const DWORD len = 16;
 	BYTE buf[len];
+	memset(buf, 0, len);
 	if (!CryptGetHashParam(cryptHasher, HP_HASHVAL, buf, const_cast<DWORD*>(&len), 0)) {
 		CryptReleaseContext(cryptProvider, 0);
 		CryptDestroyHash(cryptHasher);
