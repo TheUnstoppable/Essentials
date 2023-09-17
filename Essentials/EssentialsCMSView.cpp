@@ -18,7 +18,6 @@
 #include "EssentialsCMSView.h"
 #include "EssentialsCMSManager.h"
 #include "EssentialsCMSUtils.h"
-#include "EssentialsUtils.h"
 #include "cScTextObj.h"
 
 bool EssentialsCMSDialogView::Perform(int playerId) {

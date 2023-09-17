@@ -1,12 +1,19 @@
 #include "General.h"
-#include "da.h"
-#include "da_translation.h"
-#include "da_settings.h"
-#include "da_levelcleaner.h"
+// Engine
+#include "engine.h"
+#include "engine_common.h"
 #include "engine_da.h"
-#include "EssentialsSnipingGameModeClass.h"
-#include "EssentialsHolograms.h"
+#include "engine_game.h"
+#include "engine_obj.h"
+// DA
+#include "da.h"
+#include "da_levelcleaner.h"
+#include "da_settings.h"
+#include "da_translation.h"
+// Custom
 #include "GameObjManager.h"
+#include "EssentialsHolograms.h"
+#include "EssentialsSnipingGameModeClass.h"
 
 void EssentialsSnipingGameModeClass::Init() {
 	Register_Event(DAEvent::SETTINGSLOADED);
