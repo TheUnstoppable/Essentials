@@ -11,55 +11,20 @@
 #pragma once
 
 #include "da_event.h"
+#include "EssentialsPollClass.h"
 
-typedef enum {
-	VOTE_NONE = -1,
-	VOTE_TIME,
-	VOTE_GAMEOVER,
-	VOTE_RESTARTMAP,
-	VOTE_NEXTMAP,
-	VOTE_PLAYERKICK,
-	VOTE_NOREPAIR,
-} EssentialsVotingType;
-
-class EssentialsPollClass {
-	friend class EssentialsVotingManagerClass;
-
-public:
-	EssentialsPollClass() : StarterID(-1), Type(VOTE_NONE), StartTime(0) {
-		
-	}
-
-	int Get_Starter_ID() const { return StarterID; }
-	EssentialsVotingType Get_Type() const { return Type; }
-	clock_t Get_Start_Time()  const { return StartTime; }
-	const StringClass& Get_Data() const { return VoteData; }
-	const DynamicVectorClass<cPlayer*>& Get_Yes_Voters() const { return YesVoters; }
-	int Get_Yes_Count() const { return YesVoters.Count(); }
-	bool Add_Yes_Voter(cPlayer* Player) { if (YesVoters.ID(Player) == -1) return YesVoters.Add(Player); else return false; }
-	bool Remove_Yes_Voter(cPlayer* Player) { return YesVoters.DeleteObj(Player); }
-	const DynamicVectorClass<cPlayer*>& Get_No_Voters() const { return NoVoters; }
-	int Get_No_Count() const { return NoVoters.Count(); }
-	bool Add_No_Voter(cPlayer* Player) { if (NoVoters.ID(Player) == -1) return NoVoters.Add(Player); else return false; }
-	bool Remove_No_Voter(cPlayer* Player) { return NoVoters.DeleteObj(Player); }
-	bool Remove_Voter(cPlayer* Player) { return Remove_Yes_Voter(Player) || Remove_No_Voter(Player); }
-
-private:
-	int StarterID;
-	EssentialsVotingType Type;
-	clock_t StartTime;
-	StringClass VoteData;
-	DynamicVectorClass<cPlayer*> YesVoters;
-	DynamicVectorClass<cPlayer*> NoVoters;
-};
+class EssentialsForcedVotingPlayerObserverClass;
 
 class EssentialsVotingManagerClass : public DAEventClass {
+	friend class EssentialsForcedVotingPlayerObserverClass;
 public:
 	static EssentialsVotingManagerClass* Instance;
 
 	EssentialsVotingManagerClass();
 	~EssentialsVotingManagerClass();
 
+	void Player_Join_Event(cPlayer* Player) override;
+	void Player_Leave_Event(cPlayer* Player) override;
 	void Settings_Loaded_Event() override;
 	void Game_Over_Event() override;
 	bool Chat_Command_Event(cPlayer* Player, TextMessageEnum Type, const StringClass& Command, const DATokenClass& Text, int ReceiverID) override;
@@ -86,17 +51,27 @@ public:
 
 	bool Is_Poll_In_Progress() const { return !!PollContext; }
 	EssentialsPollClass* Get_Poll_Context() const { return PollContext; }
-	EssentialsPollClass* Create_Poll(cPlayer* Starter, EssentialsVotingType Type, const char* Data = 0);
+	EssentialsPollClass* Create_Poll(cPlayer* Starter, EssentialsVotingType Type, bool Force = false, const char* Data = 0);
 	bool End_Current_Poll();
 	void Apply_Vote_Effect();
+
+	void Force_State_Changed();
+	void Add_Force_Context(cPlayer* Player);
+	void Remove_Force_Context(cPlayer* Player);
+	void Clear_Force_Contexts();
 
 private:
 	EssentialsPollClass* PollContext;
 	float PollDuration;
 	float PollAnnounceInterval;
+	float ForcedPollDuration;
+	float ForcedPollAnnounceInterval;
 	int PollStartMinLevel;
+	int PollForceMinLevel;
 	int PollCancelMinLevel;
 	int PollToggleMinLevel;
+	int PollEnableMinLevel;
+	float PollCooldown;
 
 	StringClass PollStartSound;
 	StringClass PollAnnounceSound;
@@ -113,4 +88,6 @@ private:
 
 	float TimePollAllowAfter;
 	float TimePollExtraTime;
+
+	SList<EssentialsForcedVotingPlayerObserverClass> ForceContexts;
 };

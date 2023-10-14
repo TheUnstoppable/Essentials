@@ -71,6 +71,9 @@
     <ClCompile Include="EssentialsCMSUtils.cpp">
       <Filter>API\Content Management System</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsForcedVotingPlayerObserverClass.cpp">
+      <Filter>Features\Voting\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="General.h" />
@@ -140,6 +143,12 @@
     <ClInclude Include="EssentialsCMSUtils.h">
       <Filter>API\Content Management System</Filter>
     </ClInclude>
+    <ClInclude Include="EssentialsForcedVotingPlayerObserverClass.h">
+      <Filter>Features\Voting\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="EssentialsPollClass.h">
+      <Filter>Features\Voting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Features">
@@ -198,6 +207,9 @@
     </Filter>
     <Filter Include="API\Content Management System">
       <UniqueIdentifier>{ac153a44-bae9-42f5-8c0d-53136b109a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Voting\Dialog">
+      <UniqueIdentifier>{1f5b0673-dba7-4b05-a2c5-1589e89c3edf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

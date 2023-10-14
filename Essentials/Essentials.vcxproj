@@ -202,6 +202,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClCompile Include="EssentialsCustomPowerUpSpawners.cpp" />
     <ClCompile Include="EssentialsCustomTag.cpp" />
     <ClCompile Include="EssentialsFileIterator.cpp" />
+    <ClCompile Include="EssentialsForcedVotingPlayerObserverClass.cpp" />
     <ClCompile Include="EssentialsFreeForAllGameModeClass.cpp" />
     <ClCompile Include="EssentialsGruntEffect.cpp" />
     <ClCompile Include="EssentialsHolograms.cpp" />
@@ -233,6 +234,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsCustomPowerUpSpawners.h" />
     <ClInclude Include="EssentialsCustomTag.h" />
     <ClInclude Include="EssentialsFileIterator.h" />
+    <ClInclude Include="EssentialsForcedVotingPlayerObserverClass.h" />
     <ClInclude Include="EssentialsFreeForAllGameModeClass.h" />
     <ClInclude Include="EssentialsGruntEffect.h" />
     <ClInclude Include="EssentialsHolograms.h" />
@@ -240,6 +242,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsMapHolograms.h" />
     <ClInclude Include="EssentialsPlayerDataClass.h" />
     <ClInclude Include="EssentialsEventClass.h" />
+    <ClInclude Include="EssentialsPollClass.h" />
     <ClInclude Include="EssentialsSnipingGameModeClass.h" />
     <ClInclude Include="EssentialsUtils.h" />
     <ClInclude Include="EssentialsVoting.h" />
