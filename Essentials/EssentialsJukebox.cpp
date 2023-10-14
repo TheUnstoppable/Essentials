@@ -20,8 +20,9 @@
 // Custom
 #include "EssentialsPlayerDataClass.h"
 #include "EssentialsEventClass.h"
-#include "EssentialsJukebox.h"
 #include "EssentialsUtils.h"
+#include "EssentialsJukeboxDialogPlayerObserverClass.h"
+#include "EssentialsJukebox.h"
 
 EssentialsJukeboxClass* EssentialsJukeboxClass::Instance = 0;
 
@@ -35,6 +36,7 @@ EssentialsJukeboxClass::EssentialsJukeboxClass() {
 	Register_Event(DAEvent::GAMEOVER, INT_MAX);
 
 	Register_Chat_Command((DAECC)&EssentialsJukeboxClass::Jukebox_Command, "!jukebox|!jbox|!jb|!player|!music|!musicplayer");
+	Register_Chat_Command((DAECC)&EssentialsJukeboxClass::JukeboxDialog_Command, "!jukeboxdialog|!jboxdialog|!jbd|!musicdialog|!mpd");
 
 	DALogManager::Write_Log("_ESSENTIALS", "Loaded Jukebox feature.");
 }
@@ -140,6 +142,7 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Help for Jukebox: ");
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox: Shows the currently playing music.");
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox help: Shows commands to control Jukebox.");
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox dialog: Shows the Jukebox dialog.");
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox stop: Stops jukebox for the session.");
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox start: Starts the jukebox if it was stopped.");
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox list: Lists all available musics.");
@@ -154,21 +157,14 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox add <name>: Adds specified music in your queue.");
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] !jukebox remove <name>: Removes specified music from your queue.");
 		}
+		else if (Text[1] == "dialog") {
+			Player->Get_DA_Player()->Add_Observer(new EssentialsJukeboxDialogPlayerObserverClass);
+		}
 		else if (Text[1] == "stop") {
-			if (!Data->Get_IsStopped()) {
-				Data->Set_IsStopped(true);
-				Stop_Timer(7290001, Player->Get_Id());
-			}
-			else {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Jukebox is already stopped for you.");
-			}
+			Jukebox_Stop(Player);
 		}
 		else if (Text[1] == "start") {
-			if (Data->Get_IsStopped()) {
-				Data->Set_IsStopped(false);
-				Start_Timer(7290001, 1.f, false, Player->Get_Id());
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Jukebox is enabled for you.");
-			}
+			Jukebox_Start(Player);
 		}
 		else if (Text[1] == "list") {
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] All musics (%d in total): ", Musics.Get_Count());
@@ -177,13 +173,7 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			}
 		}
 		else if (Text[1] == "next") {
-			if (EssentialsJukeboxMusic* Music = Data->Get_CurrentMusic()) {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] \"%s\" has been skipped.", Music->Name);
-				Select_And_Play(Player);
-			}
-			else {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] There is nothing playing at the moment.");
-			}
+			Jukebox_Next(Player);
 		}
 		else if (Text[1] == "queue") {
 			DynamicVectorClass<EssentialsJukeboxMusic*>& queueMusics = Data->Get_Queue();
@@ -197,13 +187,7 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Your queue has been reset.");
 		}
 		else if (Text[1] == "shuffle") {
-			if (EnableShuffle) {
-				Data->Shuffle_List();
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Your queue has been shuffled.");
-			}
-			else {
-				DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Shuffling is not enabled.");
-			}
+			Jukebox_Shuffle(Player);
 		}
 		else if (Text[1] == "loop") {
 			if (Text.Size() >= 2) {
@@ -307,6 +291,59 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 	return false;
 }
 
+bool EssentialsJukeboxClass::JukeboxDialog_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType) {
+	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
+		Player->Get_DA_Player()->Add_Observer(new EssentialsJukeboxDialogPlayerObserverClass);
+	}
+
+	return false;
+}
+
+void EssentialsJukeboxClass::Jukebox_Start(cPlayer* Player) {
+	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
+		if (Data->Get_IsStopped()) {
+			Data->Set_IsStopped(false);
+			Start_Timer(7290001, 1.f, false, Player->Get_Id());
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Jukebox is enabled for you.");
+		} else {
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Jukebox is already enabled for you.");
+		}
+	}
+}
+
+void EssentialsJukeboxClass::Jukebox_Stop(cPlayer* Player) {
+	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
+		if (!Data->Get_IsStopped()) {
+			Data->Set_IsStopped(true);
+			Stop_Timer(7290001, Player->Get_Id());
+		} else {
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Jukebox is already stopped for you.");
+		}
+	}
+}
+
+void EssentialsJukeboxClass::Jukebox_Next(cPlayer* Player) {
+	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
+		if (EssentialsJukeboxMusic* Music = Data->Get_CurrentMusic()) {
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] \"%s\" has been skipped.", Music->Name);
+			Select_And_Play(Player, true);
+		} else {
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] There is nothing playing at the moment.");
+		}
+	}
+}
+
+void EssentialsJukeboxClass::Jukebox_Shuffle(cPlayer* Player) {
+	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
+		if (EnableShuffle) {
+			Data->Shuffle_List();
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Your queue has been shuffled.");
+		} else {
+			DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Shuffling is not enabled.");
+		}
+	}
+}
+
 void EssentialsJukeboxClass::Clear_Musics() {
 	for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
 		delete Node->Data();
@@ -343,18 +380,16 @@ void EssentialsJukeboxClass::Add_All_Musics(cPlayer* Player) {
 	}
 }
 
-void EssentialsJukeboxClass::Select_And_Play(cPlayer* Player) {
+void EssentialsJukeboxClass::Select_And_Play(cPlayer* Player, bool NextRequested) {
 	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
 		if (Data->Get_IsStopped()) {
 			return;
 		}
 
-		if (Data->Get_LoopMode() == 2) {
-			if (EssentialsJukeboxMusic* Music = Data->Get_CurrentMusic()) {
-				Data->Set_CurrentMusic(Music);
-				Stop_Timer(7290001, Player->Get_Id());
-				Start_Timer(7290001, Music->Duration, false, Player->Get_Id());
-			}
+		if (Data->Get_LoopMode() == 2 && !NextRequested && Data->Get_CurrentMusic()) {
+			Data->Set_CurrentMusic(Data->Get_CurrentMusic());
+			Stop_Timer(7290001, Player->Get_Id());
+			Start_Timer(7290001, Data->Get_CurrentMusic()->Duration, false, Player->Get_Id());
 		}
 		else {
 			if (EssentialsJukeboxMusic* Music = Data->Select_Next_Music()) {

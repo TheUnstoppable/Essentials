@@ -128,12 +128,22 @@ EssentialsJukeboxMusic* EssentialsPlayerDataClass::Set_CurrentMusic(EssentialsJu
 		if (CurrentMusic) {
 			DA::Private_Color_Message(Get_Owner(), JUKEBOXCOLOR, "[Jukebox] Now playing: %s (%s) - Use \"!jb help\" to control jukebox.", CurrentMusic->Name, Format_Seconds((int)CurrentMusic->Duration));
 			Set_Background_Music_Player(Get_Owner()->Get_GameObj(), CurrentMusic->File);
+			Set_MusicStartTime(clock());
 		}
 		else {
 			Stop_Background_Music_Player(Get_Owner()->Get_GameObj());
+			Set_MusicStartTime(0);
 		}
 	}
 	return CurrentMusic;
+}
+
+clock_t EssentialsPlayerDataClass::Get_MusicStartTime() const {
+	return MusicStartTime;
+}
+
+void EssentialsPlayerDataClass::Set_MusicStartTime(clock_t time) {
+	MusicStartTime = time;
 }
 
 void EssentialsPlayerDataClass::Add_Music(EssentialsJukeboxMusic* music) {
@@ -152,6 +162,14 @@ EssentialsJukeboxMusic* EssentialsPlayerDataClass::Select_Next_Music() {
 	if (LoopMode == 0)
 		QueueList.DeleteObj(Music);
 
+	return Music;
+}
+
+EssentialsJukeboxMusic* EssentialsPlayerDataClass::Peek_Next_Music() {
+	if (QueueList.Count() == 0)
+		return 0;
+
+	EssentialsJukeboxMusic* Music = QueueList[Get_MusicIndex() + 1 > QueueList.Count() - 1 ? 0 : Get_MusicIndex() + 1];
 	return Music;
 }
 

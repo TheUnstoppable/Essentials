@@ -18,6 +18,8 @@ struct EssentialsJukeboxMusic {
 };
 
 class EssentialsJukeboxClass : public DAEventClass {
+	friend class EssentialsJukeboxDialogPlayerObserverClass;
+
 public:
 	static EssentialsJukeboxClass* Instance;
 
@@ -32,12 +34,19 @@ public:
 	void Timer_Expired(int Number, unsigned Data) override;
 
 	bool Jukebox_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType);
+	bool JukeboxDialog_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType);
+
+	void Jukebox_Start(cPlayer* Player);
+	void Jukebox_Stop(cPlayer* Player);
+	void Jukebox_Next(cPlayer* Player);
+	void Jukebox_Shuffle(cPlayer* Player);
+
 
 protected:
 	void Clear_Musics();
 	void Reset_Playlists();
 	void Add_All_Musics(cPlayer* Player);
-	void Select_And_Play(cPlayer* Player);
+	void Select_And_Play(cPlayer* Player, bool NextRequested = false);
 	bool Is_Music_Playing(cPlayer* Player);
 	int Find_Music(StringClass Name, EssentialsJukeboxMusic*& Music);
 

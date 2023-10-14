@@ -207,6 +207,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClCompile Include="EssentialsGruntEffect.cpp" />
     <ClCompile Include="EssentialsHolograms.cpp" />
     <ClCompile Include="EssentialsJukebox.cpp" />
+    <ClCompile Include="EssentialsJukeboxDialogPlayerObserverClass.cpp" />
     <ClCompile Include="EssentialsMapHolograms.cpp" />
     <ClCompile Include="EssentialsPlayerDataClass.cpp" />
     <ClCompile Include="EssentialsEventClass.cpp" />
@@ -239,6 +240,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsGruntEffect.h" />
     <ClInclude Include="EssentialsHolograms.h" />
     <ClInclude Include="EssentialsJukebox.h" />
+    <ClInclude Include="EssentialsJukeboxDialogPlayerObserverClass.h" />
     <ClInclude Include="EssentialsMapHolograms.h" />
     <ClInclude Include="EssentialsPlayerDataClass.h" />
     <ClInclude Include="EssentialsEventClass.h" />

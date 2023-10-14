@@ -43,9 +43,12 @@ public:
 	int Get_MusicIndex();
 	EssentialsJukeboxMusic* Get_CurrentMusic() const;
 	EssentialsJukeboxMusic* Set_CurrentMusic(EssentialsJukeboxMusic* music);
+	clock_t Get_MusicStartTime() const;
+	void Set_MusicStartTime(clock_t time);
 	void Add_Music(EssentialsJukeboxMusic* music);
 	void Remove_Music(EssentialsJukeboxMusic* music);
 	EssentialsJukeboxMusic* Select_Next_Music();
+	EssentialsJukeboxMusic* Peek_Next_Music();
 	DynamicVectorClass<EssentialsJukeboxMusic*>& Get_Queue();
 	void Clear_Queue();
 	void Shuffle_List();
@@ -64,6 +67,7 @@ private:
 
 	// Jukebox
 	EssentialsJukeboxMusic* CurrentMusic;
+	clock_t MusicStartTime;
 	DynamicVectorClass<EssentialsJukeboxMusic*> QueueList;
 	bool IsStopped;
 	int LoopMode; // 0 = off, 1 = all, 2 = single

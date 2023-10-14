@@ -74,6 +74,9 @@
     <ClCompile Include="EssentialsForcedVotingPlayerObserverClass.cpp">
       <Filter>Features\Voting\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="EssentialsJukeboxDialogPlayerObserverClass.cpp">
+      <Filter>Features\Jukebox\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="General.h" />
@@ -149,6 +152,9 @@
     <ClInclude Include="EssentialsPollClass.h">
       <Filter>Features\Voting</Filter>
     </ClInclude>
+    <ClInclude Include="EssentialsJukeboxDialogPlayerObserverClass.h">
+      <Filter>Features\Jukebox\Dialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Features">
@@ -210,6 +216,9 @@
     </Filter>
     <Filter Include="Features\Voting\Dialog">
       <UniqueIdentifier>{1f5b0673-dba7-4b05-a2c5-1589e89c3edf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features\Jukebox\Dialog">
+      <UniqueIdentifier>{55dba0e7-abdb-4329-aff8-858c2ff32ea7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
