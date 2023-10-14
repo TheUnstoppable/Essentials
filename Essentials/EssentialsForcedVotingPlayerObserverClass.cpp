@@ -180,7 +180,7 @@ void EssentialsForcedVotingPlayerObserverClass::Update_Data() {
 			int count = Get_Player_Count();
 			TotalVotesLabel->Set_Label_Text(WideStringFormat(L"Total Votes: (%d/%d)", total, count));
 			TotalVotesLabel->Set_Orientation(TEXTORIENTATION_CENTER);
-			if (count / 3.f > total) {
+			if (total < (count / 3.f)) {
 				TotalVotesLabel->Set_Text_Color(255, 0, 0);
 			} else {
 				TotalVotesLabel->Set_Text_Color(255, 230, 0);
