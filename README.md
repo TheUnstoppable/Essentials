@@ -50,7 +50,7 @@ This feature lets server owners create custom dialog and chat message content us
 ## Game Modes
 
 ### Sniping
-This game mode is designed to provide a true sniping server experience. Besides of Dragonade's default configuration-based game mode, this game mode provides warning/kill zones, money-per-kill system, custom spawners, custom purchase terminals and custom pricing.
+This game mode is designed to provide a true sniping server experience. Besides of Dragonade's default configuration-based game mode, this game mode provides warning/kill zones, money-per-kill system, blockers, custom player spawns, custom purchase terminals and custom pricing.
 
 ### Free For All (FFA)
 In this game mode, players try to get as much kills as possible. This is also known as Deathmatch game mode, where everyone can kill each other. This game mode forces all players into a team with custom player models. Has built in spawn system that server owners can define custom spawn points from configuration and completely disable spawn points in the map. Teaming (also known as Team Deathmatch/TDM) with this game mode is not possible. By default, Essentials comes with a configuration that defines all mission maps except for 1st mission (M13.mix) to be 100% compatible for FFA with power-up spawners using *Custom Power-Up Spawners* game feature, custom spawn points and blockers. You can find the default configuration of this game mode [here](Essentials/da_ffa.ini).
