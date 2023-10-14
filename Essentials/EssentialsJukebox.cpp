@@ -345,6 +345,10 @@ void EssentialsJukeboxClass::Add_All_Musics(cPlayer* Player) {
 
 void EssentialsJukeboxClass::Select_And_Play(cPlayer* Player) {
 	if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
+		if (Data->Get_IsStopped()) {
+			return;
+		}
+
 		if (Data->Get_LoopMode() == 2) {
 			if (EssentialsJukeboxMusic* Music = Data->Get_CurrentMusic()) {
 				Data->Set_CurrentMusic(Music);
