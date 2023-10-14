@@ -104,6 +104,9 @@ void EssentialsAuthenticationHandler::Player_Join_Event(cPlayer* Player) {
 }
 
 void EssentialsAuthenticationHandler::EssentialsAuthenticationFilter::handleTermination(const ConnectionRequest& Request) {
+	if (!EssentialsAuthenticationManager::Is_Initialized()) {
+		return;
+	}
 	if (EssentialsAuthClient* AuthContext = Instance->Get_Auth_Context(const_cast<ConnectionRequest&>(Request))) {
 		Instance->Cleanup_Context(AuthContext);
 	}
