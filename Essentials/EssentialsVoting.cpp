@@ -432,7 +432,7 @@ void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
 		if (pass) {
 			DA::Host_Message("Vote has PASSED, there are %d more yes votes than no votes.", abs(yes - no));
 		} else {
-			if (one_third) {
+			if (!one_third) {
 				DA::Host_Message("Vote has FAILED, at least one third of the players must contribute to the poll.");
 			} else if (yes < no) {
 				DA::Host_Message("Vote has FAILED, there are %d more no votes than yes votes.", abs(yes - no));
