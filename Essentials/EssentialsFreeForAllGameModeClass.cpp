@@ -20,6 +20,7 @@
 #include "da_levelcleaner.h"
 #include "da_settings.h"
 // Custom
+#include "SpawnerDefClass.h"
 #include "EssentialsFreeForAllGameModeClass.h"
 
 REF_DEF2(DynamicVectorClass<SpawnerClass*>, SpawnerList, 0, 0x008564A8);

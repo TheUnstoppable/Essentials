@@ -12,19 +12,14 @@
 // Engine
 #include "engine.h"
 #include "engine_da.h"
-#include "engine_weap.h"
-#include "engine_player.h"
 // DA
 #include "da.h"
 #include "da_game.h"
 #include "da_cratemanager.h"
-#include "da_log.h"
 #include "da_settings.h"
 // Custom
-#include "EssentialsPlayerDataClass.h"
 #include "EssentialsEventClass.h"
 #include "EssentialsCrateInjector.h"
-#include "EssentialsUtils.h"
 
 #define VECTOR_FOREACH(Variable, Vector) for (int Variable = 0; Variable < Vector.Count(); ++Variable)
 #define VECTOR_FOREACH_REVERSE(Variable, Vector) for (int Variable = Vector.Count()-1; Variable >= 0; --Variable)

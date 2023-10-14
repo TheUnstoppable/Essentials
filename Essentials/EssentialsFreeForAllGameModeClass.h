@@ -13,7 +13,6 @@
 #include "da_gamemode.h"
 #include "da_event.h"
 #include <SpawnerClass.h>
-#include <SpawnerDefClass.h>
 
 class EssentialsFreeForAllGameModeClass : public DAGameModeClass, public DAEventClass
 {

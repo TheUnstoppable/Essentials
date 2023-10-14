@@ -12,8 +12,6 @@
 // Engine
 #include "engine.h"
 #include "engine_da.h"
-#include "engine_weap.h"
-#include "engine_player.h"
 // DA
 #include "da.h"
 #include "da_log.h"
@@ -22,7 +20,6 @@
 #include "EssentialsPlayerDataClass.h"
 #include "EssentialsEventClass.h"
 #include "EssentialsBadWordFilter.h"
-#include "EssentialsUtils.h"
 
 EssentialsBadWordFilterClass* EssentialsBadWordFilterClass::Instance = 0;
 

@@ -12,10 +12,7 @@
 // Engine
 #include "engine.h"
 #include "engine_common.h"
-#include "engine_game.h"
-#include "engine_player.h"
 #include "engine_obj.h"
-#include "engine_obj2.h"
 // DA
 #include "da.h"
 #include "da_log.h"
@@ -25,7 +22,6 @@
 #include "EssentialsEventClass.h"
 #include "EssentialsUtils.h"
 #include "EssentialsBadWordFilter.h"
-#include "EssentialsCrateInjector.h"
 #include "EssentialsGruntEffect.h"
 #include "EssentialsHolograms.h"
 #include "EssentialsJukebox.h"
@@ -35,7 +31,6 @@
 #include "EssentialsAuthentication.h"
 #include "EssentialsCustomTag.h"
 #include "EssentialsVoting.h"
-#include "EssentialsFreeForAllGameModeClass.h"
 #include "EssentialsSnipingGameModeClass.h"
 #include "EssentialsCMSManager.h"
 

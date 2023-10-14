@@ -12,14 +12,12 @@
 // Engine
 #include "engine.h"
 #include "engine_da.h"
-#include "engine_weap.h"
 #include "engine_player.h"
 // DA
 #include "da.h"
 #include "da_log.h"
 #include "da_settings.h"
 // Custom
-#include "EssentialsPlayerDataClass.h"
 #include "EssentialsEventClass.h"
 #include "EssentialsCustomTag.h"
 #include "EssentialsUtils.h"

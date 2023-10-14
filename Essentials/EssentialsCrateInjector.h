@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "da_event.h"
 #include "da_cratemanager.h"
 
 class EssentialsCrateManager : public DACrateManager {
