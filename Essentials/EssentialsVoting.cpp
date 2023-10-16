@@ -417,7 +417,7 @@ void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
 		DA::Host_Message("A poll %s to %s. You have %.0f seconds to vote \"!yes\" or \"!no\".", newPoll ? "has just started" : "is in progress", Get_Action_Description(), (voteEnd - clock()) / 1000.f);
 		DA::Create_2D_Sound(newPoll ? PollStartSound : PollAnnounceSound);
 
-		if (clock() + (interval * 1000) < voteEnd) {
+		if ((clock() + (interval * 1000)) + 100 < voteEnd) {
 			Start_Timer(1000, interval);
 		}
 	}
