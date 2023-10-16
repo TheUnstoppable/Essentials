@@ -160,7 +160,7 @@ void EssentialsForcedVotingPlayerObserverClass::Update_Data() {
 			if (total > 0) {
 				ProgressBar->Set_Minimum(0);
 				ProgressBar->Set_Maximum(total);
-				ProgressBar->Set_Progress((int)((float)yes / total));
+				ProgressBar->Set_Progress(yes);
 			} else {
 				ProgressBar->Set_Minimum(0);
 				ProgressBar->Set_Maximum(2);
