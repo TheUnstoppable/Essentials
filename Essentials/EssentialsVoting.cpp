@@ -454,6 +454,8 @@ void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
 		} else {
 			if (PollContext->Is_Forced()) {
 				Start_Timer(4001, 5.0f);
+			} else {
+				Timer_Expired(4001, 0);
 			}
 		}
 	}
