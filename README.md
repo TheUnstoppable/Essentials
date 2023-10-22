@@ -42,7 +42,8 @@ Displays a dialog to registered players during connection request. Prompts for p
 Displays custom tags under player's name tags, and saves into a database.
 
 ### Voting
-Allows voting for more time, ending the current map, restarting the current map, changing the next map, kicking a player and disabling building repairs.
+Allows voting for more time, ending the current map, restarting the current map, changing the next map, kicking a player and disabling building repairs.  
+Includes a "Forced Polls" option that displays an interactive dialog and enforces everyone to vote.
 
 ### Content Management System
 This feature lets server owners create custom dialog and chat message content using a text-based custom markup language, which can be activated by an API, player join event or chat phrases/commands.
