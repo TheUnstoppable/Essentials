@@ -214,6 +214,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClCompile Include="EssentialsCommands.cpp" />
     <ClCompile Include="EssentialsSnipingGameModeClass.cpp" />
     <ClCompile Include="EssentialsUtils.cpp" />
+    <ClCompile Include="EssentialsVoteStatusPlayerObserverClass.cpp" />
     <ClCompile Include="EssentialsVoting.cpp" />
     <ClCompile Include="General.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -247,6 +248,7 @@ copy "$(TargetPath)" "%RenServerPath%\$(TargetFileName)"
     <ClInclude Include="EssentialsPollClass.h" />
     <ClInclude Include="EssentialsSnipingGameModeClass.h" />
     <ClInclude Include="EssentialsUtils.h" />
+    <ClInclude Include="EssentialsVoteStatusPlayerObserverClass.h" />
     <ClInclude Include="EssentialsVoting.h" />
     <ClInclude Include="General.h" />
   </ItemGroup>
