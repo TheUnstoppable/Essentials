@@ -15,7 +15,7 @@
 #include "EssentialsCMSView.h"
 
 class ESSENTIALS_API EssentialsCMSHandler : public DAEventClass {
-	friend class EssentialsCMSDialogView;
+	friend class EssentialsCMSView;
 
 public:
 	EssentialsCMSHandler();
@@ -30,11 +30,12 @@ public:
 	virtual void Dialog_Event(cPlayer* Player, DialogMessageType Type, ScriptedDialogClass* Dialog, ScriptedControlClass* Control);
 
 protected:
-	void Add_Exit_Button(int id) { ExitButtons.Add(id); }
+	void Add_View(EssentialsCMSView* v) { Views.Add(v); }
+	void Remove_View(EssentialsCMSView* v) { Views.DeleteObj(v); }
 
 private:
 	static EssentialsCMSHandler* Instance;
-	DynamicVectorClass<int> ExitButtons;
+	DynamicVectorClass<EssentialsCMSView*> Views;
 };
 
 class ESSENTIALS_API EssentialsCMSManager {

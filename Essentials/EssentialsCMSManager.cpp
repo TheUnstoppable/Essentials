@@ -93,14 +93,25 @@ void EssentialsCMSHandler::Player_Join_Event(cPlayer* Player) {
 }
 
 void EssentialsCMSHandler::Dialog_Event(cPlayer* Player, DialogMessageType Type, ScriptedDialogClass* Dialog, ScriptedControlClass* Control) {
-	if (Control->Get_Control_Type() == CONTROLTYPE_BUTTON && Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK) {
-		for(int i = 0; i < ExitButtons.Count(); ++i) {
-			if (ExitButtons[i] == Control->Get_Control_ID()) {
-				Delete_Dialog(Dialog);
-				ExitButtons.Delete(i);
-				return;
-			}
+	if (!Dialog) return;
+
+	EssentialsCMSDialogView* View = 0;
+	for(int i = 0; i < Views.Count(); ++i) {
+		if (Views[i]->As_DialogContent() && ((EssentialsCMSDialogView*)Views[i])->Get_Dialog_ID() == Dialog->Get_Dialog_ID()) {
+			View = Views[i]->As_DialogContent();
+			break;
 		}
+	}
+
+	if (!View) return;
+
+	if (Type == MESSAGE_TYPE_DIALOG_ESCAPE && ((EssentialsCMSDialogDefinition*)View->Get_Definition())->Close_On_Escape()) {
+		Delete_Dialog(Dialog);
+		return;
+	}
+	if (Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK && Control->Get_Control_Type() == CONTROLTYPE_BUTTON) {
+		Delete_Dialog(Dialog);
+		return;
 	}
 }
 
@@ -178,9 +189,17 @@ void EssentialsCMSManager::Reload() {
 		EssentialsCMSDefinition *Def = 0;
 		
 		if (token == "CMSMenuDialog") {
-			StringClass name;
+			StringClass name, closeonesc;
 			if (!reader.Next_Token(name)) {
 				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSMenuDialog::name missing.\n", filename, reader.Line_Index());
+				continue;
+			}
+			if (!reader.Next_Token(closeonesc)) {
+				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::closeonesc missing.\n", filename, reader.Line_Index());
+				continue;
+			}
+			if (closeonesc.Compare_No_Case("yes") && closeonesc.Compare_No_Case("no")) {
+				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::closeonesc invalid value. (\"Yes\" or \"No\" expected)\n", filename, reader.Line_Index());
 				continue;
 			}
 
@@ -191,7 +210,7 @@ void EssentialsCMSManager::Reload() {
 			Def = DialogDef;
 		} else if (token == "CMSPopupDialog") {
 			Vector2 position, size;
-			StringClass name, title, orientation;
+			StringClass name, title, orientation, closeonesc;
 			DialogOrientation cOrientation;
 			if (!reader.Next_Token(name)) {
 				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::name missing.\n", filename, reader.Line_Index());
@@ -233,6 +252,14 @@ void EssentialsCMSManager::Reload() {
 				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::orientation invalid value.\n", filename, reader.Line_Index());
 				continue;
 			}
+			if (!reader.Next_Token(closeonesc)) {
+				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::closeonesc missing.\n", filename, reader.Line_Index());
+				continue;
+			}
+			if (closeonesc.Compare_No_Case("yes") && closeonesc.Compare_No_Case("no")) {
+				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::closeonesc invalid value. (\"Yes\" or \"No\" expected)\n", filename, reader.Line_Index());
+				continue;
+			}
 			if (!reader.Remaining_Text(title)) {
 				Console_Output("[Essentials] CMSParser:%s:%d:Error: CMSPopupDialog::title missing.\n", filename, reader.Line_Index());
 				continue;
@@ -244,6 +271,7 @@ void EssentialsCMSManager::Reload() {
 			DialogDef->Set_Dialog_Position(position);
 			DialogDef->Set_Dialog_Size(size);
 			DialogDef->Set_Dialog_Orientation(cOrientation);
+			DialogDef->Set_Close_On_Escape(!closeonesc.Compare_No_Case("Yes"));
 			DialogDef->Set_Dialog_Title(title);
 
 			Def = DialogDef;

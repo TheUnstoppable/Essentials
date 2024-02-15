@@ -22,38 +22,39 @@ class ESSENTIALS_API EssentialsCMSView {
 	friend class EssentialsCMSChatView;
 
 public:
+	virtual ~EssentialsCMSView();
 	virtual EssentialsCMSDialogView* As_DialogContent() { return NULL; }
 	virtual EssentialsCMSChatView* As_ChatContent() { return NULL; }
-
-	virtual bool Perform(int playerId) = 0;
-
 	const EssentialsCMSDefinition* Get_Definition() { return Definition; }
+	virtual bool Perform(int playerId) = 0;
 
 protected:
 	EssentialsCMSDefinition* Definition;
 
 private:
-	EssentialsCMSView() : Definition(0) {}
-	EssentialsCMSView(EssentialsCMSDefinition* Definition) : Definition(Definition) {}
+	EssentialsCMSView(EssentialsCMSDefinition* Definition);
 };
 
 class ESSENTIALS_API EssentialsCMSDialogView : public EssentialsCMSView {
 	friend class EssentialsCMSDialogDefinition;
 public:
 	virtual EssentialsCMSDialogView* As_DialogContent() { return this; }
-
 	virtual bool Perform(int playerId);
 
+	int Get_Dialog_ID() const { return DialogID; }
+
 protected:
-	EssentialsCMSDialogView() : EssentialsCMSView(0) {}
-	EssentialsCMSDialogView(EssentialsCMSDefinition* Definition) : EssentialsCMSView(Definition) {}
+	EssentialsCMSDialogView() : EssentialsCMSView(0), DialogID(0) {}
+	EssentialsCMSDialogView(EssentialsCMSDefinition* Definition) : EssentialsCMSView(Definition), DialogID(0) {}
+
+private:
+	int DialogID;
 };
 
 class ESSENTIALS_API EssentialsCMSChatView : public EssentialsCMSView {
 	friend class EssentialsCMSChatDefinition;
 public:
 	virtual EssentialsCMSChatView* As_ChatContent() { return this; }
-
 	virtual bool Perform(int playerId);
 
 protected:

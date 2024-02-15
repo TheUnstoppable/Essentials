@@ -20,8 +20,17 @@
 #include "EssentialsCMSUtils.h"
 #include "cScTextObj.h"
 
+EssentialsCMSView::EssentialsCMSView(EssentialsCMSDefinition* Definition) : Definition(Definition) {
+	EssentialsCMSHandler::Get_Instance()->Add_View(this);
+}
+
+EssentialsCMSView::~EssentialsCMSView() {
+	EssentialsCMSHandler::Get_Instance()->Remove_View(this);
+}
+
 bool EssentialsCMSDialogView::Perform(int playerId) {
 	if (!Find_Player(playerId)) return false;
+	if (DialogID) return false;
 
 	if (!(Definition && Definition->As_DialogDefinition())) return false;
 	EssentialsCMSDialogDefinition* Def = Definition->As_DialogDefinition();
@@ -45,7 +54,6 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 
 	if (!Dialog) return false;
 
-	DynamicVectorClass<int> ExitButtonIDs;
 	for (SLNode<EssentialsCMSContentDefinition>* n = Def->Get_Content().Head(); n; n = n->Next()) {
 		EssentialsCMSContentDefinition* BaseContentDef = n->Data();
 		if (EssentialsCMSDialogContentDefinition* ContentDef = BaseContentDef->As_DialogContentDefinition()) {
@@ -59,7 +67,7 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 						(int)ContentDef->Get_Size().X,
 						(int)ContentDef->Get_Size().Y,
 						WideStringClass(Process_Placeholders(ContentDef->Get_Data(), playerId)),
-						false,
+						TEXTSTYLE_BODY,
 						ContentDef->Get_Color());
 					Label->Set_Orientation(ContentDef->Get_Text_Orientation());
 					Control = Label;
@@ -74,7 +82,7 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 						(int)ContentDef->Get_Size().X,
 						(int)ContentDef->Get_Size().Y,
 						WideStringClass(Process_Placeholders(ContentDef->Get_Data(), playerId)),
-						true,
+						TEXTSTYLE_TITLE,
 						ContentDef->Get_Color());
 					Label->Set_Orientation(ContentDef->Get_Text_Orientation());
 					Control = Label;
@@ -101,7 +109,6 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 						(int)ContentDef->Get_Size().X,
 						(int)ContentDef->Get_Size().Y,
 						WideStringClass(Process_Placeholders(ContentDef->Get_Data(), playerId)));
-					ExitButtonIDs.Add(Button->Get_Control_ID());
 					Control = Button;
 					break;
 				}
@@ -114,7 +121,6 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 						(int)ContentDef->Get_Size().X,
 						(int)ContentDef->Get_Size().Y,
 						WideStringClass(Process_Placeholders(ContentDef->Get_Data(), playerId)));
-					ExitButtonIDs.Add(Button->Get_Control_ID());
 					Control = Button;
 					break;
 				}
@@ -128,7 +134,6 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 						(int)ContentDef->Get_Size().Y,
 						ContentDef->Get_Data(),
 						Process_Placeholders(ContentDef->Get_Data(), playerId));
-					ExitButtonIDs.Add(Button->Get_Control_ID());
 					Control = Button;
 					break;
 				}
@@ -141,10 +146,7 @@ bool EssentialsCMSDialogView::Perform(int playerId) {
 		}
 	}
 
-	for(int i = 0; i < ExitButtonIDs.Count(); i++)
-	{
-		EssentialsCMSHandler::Get_Instance()->Add_Exit_Button(ExitButtonIDs[i]);
-	}
+	DialogID = Dialog->Get_Dialog_ID();
 	Show_Dialog(Dialog);
 
 	return true;

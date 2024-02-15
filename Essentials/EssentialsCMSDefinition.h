@@ -146,12 +146,14 @@ public:
 	const Vector2& Get_Dialog_Position() const { return Position; }
 	const Vector2& Get_Dialog_Size() const { return Size; }
 	const StringClass& Get_Dialog_Title() const { return Title; }
+	bool Close_On_Escape() const { return CloseOnEsc; }
 
 	void Set_Dialog_Type(DialogType type) { DialogType = type; }
 	void Set_Dialog_Orientation(DialogOrientation orientation) { DialogOrientation = orientation; }
 	void Set_Dialog_Position(const Vector2& position) { Position = position; }
 	void Set_Dialog_Size(const Vector2& size) { Size = size; }
 	void Set_Dialog_Title(const char* title) { Title = title; }
+	void Set_Close_On_Escape(bool close) { CloseOnEsc = close; }
 
 protected:
 	DialogType DialogType;
@@ -159,6 +161,7 @@ protected:
 	Vector2 Size;
 	DialogOrientation DialogOrientation;
 	StringClass Title;
+	bool CloseOnEsc;
 };
 class ESSENTIALS_API EssentialsCMSChatDefinition : public EssentialsCMSDefinition {
 public:
