@@ -37,7 +37,7 @@ private:
 	bool DisableScreenEffects;
 	float Prices[2];
 	SoldierGameObjDef* SniperClasses[2][2]; // Basic, Advanced
-	PhysicalGameObj* AdvancedTerminals[2][2]; // Basic, Advanced
-	AABoxClass BaseZones[2][2]; // Warning, Kill
+	ReferencerClass AdvancedTerminals[2][2]; // Basic, Advanced
+	OBBoxClass BaseZones[2][2]; // Warning, Kill
 	Vector3 Spawners[2];
 };

@@ -15,6 +15,8 @@
 #include "EssentialsHolograms.h"
 #include "EssentialsSnipingGameModeClass.h"
 
+#include "PhysicsSceneClass.h"
+
 void EssentialsSnipingGameModeClass::Init() {
 	Register_Event(DAEvent::SETTINGSLOADED);
 	Register_Object_Event(DAObjectEvent::CREATED, DAObjectEvent::PLAYER);
@@ -89,12 +91,16 @@ void EssentialsSnipingGameModeClass::Settings_Loaded_Event() {
 			Load base zones.
 		*/
 		for (int j = 0; j < 2; ++j) {
-			Vector3 BottomCorner, TopCorner;
-			Settings->Get_Vector3(BottomCorner, StringFormat("Base%sZone%s_Bottom", j ? "Warning" : "Kill", TeamName), Vector3(0,0,0));
-			Settings->Get_Vector3(TopCorner, StringFormat("Base%sZone%s_Top", j ? "Warning" : "Kill", TeamName), Vector3(0, 0, 0));
+			Vector3 Center, Extent, Rotation;
+			Settings->Get_Vector3(Center, StringFormat("Base%sZone%s_Center", j ? "Warning" : "Kill", TeamName), Vector3(0,0,0));
+			Settings->Get_Vector3(Extent, StringFormat("Base%sZone%s_Extent", j ? "Warning" : "Kill", TeamName), Vector3(0,0,0));
+			Settings->Get_Vector3(Rotation, StringFormat("Base%sZone%s_Rotation", j ? "Warning" : "Kill", TeamName), Vector3(0,0,0));
 
-			AABoxClass box;
-			box.Init(LineSegClass(BottomCorner, TopCorner));
+			Matrix3 mat(true);
+			mat.Rotate_X(DEG2RAD(Rotation.X));
+			mat.Rotate_Y(DEG2RAD(Rotation.Y));
+			mat.Rotate_Z(DEG2RAD(Rotation.Z));
+			OBBoxClass box(Center, Extent, mat);
 			BaseZones[i][j] = box;
 		}
 
@@ -182,17 +188,28 @@ void EssentialsSnipingGameModeClass::Poke_Event(cPlayer* Player, PhysicalGameObj
 	}
 }
 
+bool Is_Inside_OBBox(OBBoxClass& box, PhysicalGameObj* obj) {
+	MultiListClass<PhysClass> physList;
+	PhysicsSceneClass::Get_Instance()->Collect_Objects(box, true, true, &physList);
+	for (MultiListIterator<PhysClass> iter(&physList); iter; ++iter) {
+		if (obj->Peek_Physical_Object() == iter.Peek_Obj()) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void EssentialsSnipingGameModeClass::Timer_Expired(int Number, unsigned Data) {
 	if (Number == 1001) {
 		for(SLNode<SoldierGameObj>* n = GameObjManager::StarGameObjList.Head(); n; n = n->Next()) {
 			SoldierGameObj* obj = n->Data();
 			int team = Get_Object_Type(obj);
 
-			if (Is_Inside_AABox(BaseZones[PTTEAM(team)][0], Commands->Get_Position(obj))) {
+			if (Is_Inside_OBBox(BaseZones[PTTEAM(team)][0], obj)) {
 				DA::Page_Player(obj, "You have been killed for entering the enemy base.");
 				obj->Set_Delete_Pending();
 			}
-			else if (Is_Inside_AABox(BaseZones[PTTEAM(team)][1], Commands->Get_Position(obj))) {
+			else if (Is_Inside_OBBox(BaseZones[PTTEAM(team)][1], obj)) {
 				if (!Is_Timer(9991, obj->Get_Player()->Get_Id())) {
 					DA::Page_Player(obj, "Don't go into the enemy base, otherwise you will be killed.");
 					Start_Timer(9991, 10.f, false, obj->Get_Player()->Get_Id());
@@ -227,8 +244,6 @@ void EssentialsSnipingGameModeClass::Reset() {
 	if (AdvancedTerminals[1][1]) {
 		AdvancedTerminals[1][1]->Set_Delete_Pending();
 	}
-
-	memset(AdvancedTerminals, 0, sizeof(AdvancedTerminals));
 
 	EssentialsHologramsManager::Delete_Hologram("SnipingBasicPTHoloGDI");
 	EssentialsHologramsManager::Delete_Hologram("SnipingBasicPTHoloNod");
