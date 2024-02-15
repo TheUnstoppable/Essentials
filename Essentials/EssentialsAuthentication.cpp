@@ -182,10 +182,9 @@ ConnectionAcceptanceFilter::STATUS EssentialsAuthenticationHandler::EssentialsAu
 
 void EssentialsAuthenticationHandler::Dialog_Event(int ClientID, int DialogID, int ControlID, DialogMessageType Message) {
 	if (ScriptedDialogClass* Dialog = Find_Dialog(DialogID)) {
-		if (ScriptedControlClass* Control = Dialog->Find_Control(ControlID)) {
-			if (EssentialsAuthClient* AuthContext = Instance->Get_Auth_Context(ClientID)) {
-				AuthContext->Dialog_Message(Message, Dialog, Control);
-			}
+		if (EssentialsAuthClient* AuthContext = Instance->Get_Auth_Context(ClientID)) {
+			ScriptedControlClass* Control = Dialog->Find_Control(ControlID);
+			AuthContext->Dialog_Message(Message, Dialog, Control);
 		}
 	}
 }
@@ -437,8 +436,44 @@ EssentialsAuthClient::~EssentialsAuthClient() {
 
 void EssentialsAuthClient::Dialog_Message(DialogMessageType Type, ScriptedDialogClass* Dialog, ScriptedControlClass* Control) {
 	if (Dialog != this->Dialog) return;
-	
-	if (Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK) {
+
+	if (Type == MESSAGE_TYPE_DIALOG_SHOW) {
+		if (TextArea) {
+			Dialog->Focus_Control(TextArea);
+		}
+	}
+	else if (Type == MESSAGE_TYPE_DIALOG_ESCAPE) {
+		if (DialogState == 1 || DialogState == 2) {
+			DialogState = 0;
+			Destroy_Dialog();
+			Create_Dialog();
+		}
+	}
+	else if (Type == MESSAGE_TYPE_CONTROL_VALUE_CONFIRM) {
+		if (Control == TextArea && (DialogState == 1 || DialogState == 2)) {
+			switch (DialogState) {
+				case 1: {
+					PasswordAttempt = TextArea->Get_Text();
+					AuthState = 3;
+
+					StatusLabel->Set_Label_Text(L"Authenticating...");
+					StatusLabel->Set_Text_Color(255, 255, 0);
+					break;
+				}
+				case 2: {
+					switch (EssentialsAuthenticationHandler::Instance->Do_Nick_Change(this, TextArea->Get_Text())) {
+						case 1: {
+							StatusLabel->Set_Label_Text(L"Please wait...");
+							StatusLabel->Set_Text_Color(255, 255, 0);
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+	else if (Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK) {
 		if (Control == ProceedButton && (DialogState == 1 || DialogState == 2)) {
 			switch (DialogState) {
 				case 1: {
@@ -531,7 +566,7 @@ void EssentialsAuthClient::Create_Controls() {
 		
 		TextArea = Create_TextArea_Control(Dialog, 10, 35, 230, 15);
 		TextArea->Set_Password_Field(true);
-		StatusLabel = Create_Label_Control(Dialog, 10, 52, 230, 8, L"", false, Vector3(1.f, 0.f, 0.f));
+		StatusLabel = Create_Label_Control(Dialog, 10, 52, 230, 8, L"", TEXTSTYLE_BODY, Vector3(1.f, 0.f, 0.f));
 
 		BackButton = Create_Bordered_Button_Control(Dialog, 10, 62, 70, 18, L"Back");
 		PasswordShowHideButton = Create_Bordered_Button_Control(Dialog, 90, 62, 70, 18, L"Show Password");
@@ -541,7 +576,7 @@ void EssentialsAuthClient::Create_Controls() {
 		Create_Label_Control(Dialog, 10, 10, 230, 30, WideStringFormat(L"\"%ws\" is a protected name. Please enter a new name below or go back for other options.", Request->clientName));
 
 		TextArea = Create_TextArea_Control(Dialog, 10, 35, 230, 15);
-		StatusLabel = Create_Label_Control(Dialog, 10, 52, 230, 8, L"", false, Vector3(1.f, 0.f, 0.f));
+		StatusLabel = Create_Label_Control(Dialog, 10, 52, 230, 8, L"", TEXTSTYLE_BODY, Vector3(1.f, 0.f, 0.f));
 
 		BackButton = Create_Bordered_Button_Control(Dialog, 10, 62, 70, 18, L"Back");
 		ProceedButton = Create_Bordered_Button_Control(Dialog, 170, 62, 70, 18, L"Validate");
