@@ -15,7 +15,10 @@ EssentialsJukeboxDialogPlayerObserverClass::~EssentialsJukeboxDialogPlayerObserv
 }
 
 void EssentialsJukeboxDialogPlayerObserverClass::Dialog_Message(DialogMessageType Type, ScriptedDialogClass* Dialog, ScriptedControlClass* Control) {
-	if (Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK) {
+	if (Type == MESSAGE_TYPE_DIALOG_ESCAPE) {
+		Set_Delete_Pending();
+	}
+	else if (Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK && Control) {
 		if (Control->Get_Control_ID() == StartStopButtonID) {
 			JukeboxEnabled ? EssentialsJukeboxClass::Instance->Jukebox_Stop(Get_Owner()) : EssentialsJukeboxClass::Instance->Jukebox_Start(Get_Owner());
 		}
@@ -142,30 +145,30 @@ void EssentialsJukeboxDialogPlayerObserverClass::Timer_Expired(int Number, unsig
 }
 
 void EssentialsJukeboxDialogPlayerObserverClass::Create_Dialog() {
-	ScriptedPopupDialogClass* Popup = Create_Centered_Popup(Get_ID(), 250, 115, L"Jukebox");
+	ScriptedPopupDialogClass* Popup = Create_Centered_Popup(Get_ID(), 250, 123, L"Jukebox");
 	DialogID = Popup->Get_Dialog_ID();
 
 	CurrentlyPlayingDescriptionLabelID = Create_Label_Control(Popup, 5, 5, 115, 8, L"Now Playing: ")->Get_Control_ID();
-	CurrentlyPlayingLabelID = Create_Label_Control(Popup, 8, 13, 112, 8, L"")->Get_Control_ID();
+	CurrentlyPlayingLabelID = Create_Label_Control(Popup, 8, 13, 112, 16, L"")->Get_Control_ID();
 
 	NextUpDescriptionLabelID = Create_Label_Control(Popup, 130, 5, 115, 8, L"Next Up: ")->Get_Control_ID();
-	NextUpLabelID = Create_Label_Control(Popup, 133, 13, 112, 8, L"")->Get_Control_ID();
+	NextUpLabelID = Create_Label_Control(Popup, 133, 13, 112, 16, L"")->Get_Control_ID();
 
-	TimeElapsedLabelID = Create_Label_Control(Popup, 5, 27, 120, 8, L"00:00")->Get_Control_ID();
-	auto MusicDurationLabel = Create_Label_Control(Popup, 125, 27, 120, 8, L"00:00");
+	TimeElapsedLabelID = Create_Label_Control(Popup, 5, 35, 120, 8, L"00:00")->Get_Control_ID();
+	auto MusicDurationLabel = Create_Label_Control(Popup, 125, 35, 120, 8, L"00:00");
 	MusicDurationLabel->Set_Orientation(TEXTORIENTATION_RIGHT);
 	MusicDurationLabelID = MusicDurationLabel->Get_Control_ID();
-	ProgressBarID = Create_ProgressBar_Control(Popup, 5, 36, 240, 12, 0, 100)->Get_Control_ID();
+	ProgressBarID = Create_ProgressBar_Control(Popup, 5, 42, 240, 12, 0, 100)->Get_Control_ID();
 
-	StartStopButtonID = Create_Bordered_Button_Control(Popup, 5, 53, 90, 12, L"Start / Stop")->Get_Control_ID();
-	NextButtonID = Create_Bordered_Button_Control(Popup, 5, 68, 90, 12, L"Next")->Get_Control_ID();
-	ShuffleButtonID = Create_Bordered_Button_Control(Popup, 5, 83, 90, 12, L"Shuffle")->Get_Control_ID();
-	CloseButtonID = Create_Bordered_Button_Control(Popup, 5, 98, 90, 12, L"Close")->Get_Control_ID();
+	StartStopButtonID = Create_Bordered_Button_Control(Popup, 5, 61, 90, 12, L"Start / Stop")->Get_Control_ID();
+	NextButtonID = Create_Bordered_Button_Control(Popup, 5, 76, 90, 12, L"Next")->Get_Control_ID();
+	ShuffleButtonID = Create_Bordered_Button_Control(Popup, 5, 91, 90, 12, L"Shuffle")->Get_Control_ID();
+	CloseButtonID = Create_Bordered_Button_Control(Popup, 5, 106, 90, 12, L"Close")->Get_Control_ID();
 
-	Create_Label_Control(Popup, 102, 53, 143, 8, L"Selected Loop Mode: ");
-	LoopOffCheckboxID = Create_CheckBox_Control(Popup, 102, 63, 143, 10, L"Don't loop.")->Get_Control_ID();
-	LoopAllCheckboxID = Create_CheckBox_Control(Popup, 102, 75, 143, 10, L"Loop the playlist.")->Get_Control_ID();
-	LoopOneCheckboxID = Create_CheckBox_Control(Popup, 102, 87, 143, 10, L"Loop the currently playing music.")->Get_Control_ID();
+	Create_Label_Control(Popup, 102, 61, 143, 8, L"Selected Loop Mode: ");
+	LoopOffCheckboxID = Create_CheckBox_Control(Popup, 102, 71, 143, 10, L"Don't loop.")->Get_Control_ID();
+	LoopAllCheckboxID = Create_CheckBox_Control(Popup, 102, 83, 143, 10, L"Loop the playlist.")->Get_Control_ID();
+	LoopOneCheckboxID = Create_CheckBox_Control(Popup, 102, 95, 143, 10, L"Loop the currently playing music.")->Get_Control_ID();
 
 	Show_Dialog(Popup);
 }
