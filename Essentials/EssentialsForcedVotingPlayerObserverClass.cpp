@@ -31,7 +31,9 @@ void EssentialsForcedVotingPlayerObserverClass::Init() {
 }
 
 EssentialsForcedVotingPlayerObserverClass::~EssentialsForcedVotingPlayerObserverClass() {
-	Destroy_Dialog();
+	if (Find_Player(Get_ID())) {
+		Destroy_Dialog();
+	}
 }
 
 void EssentialsForcedVotingPlayerObserverClass::Dialog_Message(DialogMessageType Type, ScriptedDialogClass* Dialog, ScriptedControlClass* Control) {
@@ -63,7 +65,7 @@ void EssentialsForcedVotingPlayerObserverClass::On_Poll_End(bool passed) {
 		PollEnded = true;
 		if (ScriptedLabelControlClass* TitleLabel = (ScriptedLabelControlClass*)Dialog->Find_Control(TitleLabelID)) {
 			TitleLabel->Set_Location(5, 30);
-			TitleLabel->Set_Is_Title(true);
+			TitleLabel->Set_Style(TEXTSTYLE_TITLE);
 			TitleLabel->Set_Label_Text(passed ? L"Poll PASSED" : L"Poll FAILED");
 		}
 		if (ScriptedLabelControlClass* DescriptionLabel = (ScriptedLabelControlClass*)Dialog->Find_Control(DescriptionLabelID)) {
@@ -96,14 +98,14 @@ void EssentialsForcedVotingPlayerObserverClass::Create_Dialog() {
 
 	TitleLabelID = Create_Label_Control(Popup, 5, 5, 210, 16, L"The poll is still initializing, please wait until the next network update. Consider yourself lucky for seeing this message.")->Get_Control_ID();
 	DescriptionLabelID = Create_Label_Control(Popup, 5, 22, 38, 8, L"Your vote is: ")->Get_Control_ID();
-	YourVoteLabelID = Create_Label_Control(Popup, 44, 22, 40, 8, L"Not Voted", false, Vector3(0.5, 0.5, 0.5))->Get_Control_ID();
+	YourVoteLabelID = Create_Label_Control(Popup, 44, 22, 40, 8, L"Not Voted", TEXTSTYLE_BODY, Vector3(0.5, 0.5, 0.5))->Get_Control_ID();
 	YesButtonID = Create_Title_Button_Control(Popup, 5, 35, 105, 25, L"Vote Yes")->Get_Control_ID();
 	NoButtonID = Create_Title_Button_Control(Popup, 110, 35, 105, 25, L"Vote No")->Get_Control_ID();
 	PollDurationDescriptionLabelID = Create_Label_Control(Popup, 5, 65, 50, 8, L"The poll ends in: ")->Get_Control_ID();
 	PollDurationLabelID = Create_Label_Control(Popup, 56, 65, 140, 8, L"This poll is infinite, there's no way out.")->Get_Control_ID();
 	PollDurationProgressBarID = Create_ProgressBar_Control(Popup, 5, 75, 210, 12)->Get_Control_ID();
 	YesVotesLabelID = Create_Label_Control(Popup, 5, 95, 60, 8, L"Yes: 0 votes (50%)")->Get_Control_ID();
-	auto TotalVotesLabel = Create_Label_Control(Popup, 70, 95, 80, 8, L"Total Votes: (0/0)", false, Vector3(1, 0, 0));
+	auto TotalVotesLabel = Create_Label_Control(Popup, 70, 95, 80, 8, L"Total Votes: (0/0)", TEXTSTYLE_BODY, Vector3(1, 0, 0));
 	TotalVotesLabel->Set_Orientation(TEXTORIENTATION_CENTER);
 	TotalVotesLabelID = TotalVotesLabel->Get_Control_ID();
 	auto NoVotesLabel = Create_Label_Control(Popup, 155, 95, 60, 8, L"No: 0 votes (50%)");

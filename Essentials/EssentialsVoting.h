@@ -14,9 +14,11 @@
 #include "EssentialsPollClass.h"
 
 class EssentialsForcedVotingPlayerObserverClass;
+class EssentialsVoteStatusPlayerObserverClass;
 
 class EssentialsVotingManagerClass : public DAEventClass {
 	friend class EssentialsForcedVotingPlayerObserverClass;
+	friend class EssentialsVoteStatusPlayerObserverClass;
 public:
 	static EssentialsVotingManagerClass* Instance;
 
@@ -25,10 +27,14 @@ public:
 
 	void Player_Join_Event(cPlayer* Player) override;
 	void Player_Leave_Event(cPlayer* Player) override;
+	void Level_Loaded_Event() override;
 	void Settings_Loaded_Event() override;
 	void Game_Over_Event() override;
-	bool Chat_Command_Event(cPlayer* Player, TextMessageEnum Type, const StringClass& Command, const DATokenClass& Text, int ReceiverID) override;
 	void Timer_Expired(int Number, unsigned Data) override;
+
+	bool Vote_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType);
+	bool Yes_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType);
+	bool No_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType);
 
 	inline StringClass Get_Action_Description() const {
 		switch (PollContext->Get_Type()) {
@@ -59,6 +65,9 @@ public:
 	void Add_Force_Context(cPlayer* Player);
 	void Remove_Force_Context(cPlayer* Player);
 	void Clear_Force_Contexts();
+	void Add_Vote_Status(cPlayer* Player);
+	void Remove_Vote_Status(cPlayer* Player);
+	void Clear_Vote_Status();
 
 private:
 	EssentialsPollClass* PollContext;
@@ -72,6 +81,7 @@ private:
 	int PollToggleMinLevel;
 	int PollEnableMinLevel;
 	float PollCooldown;
+	int RequiredPercentageToPass;
 
 	StringClass PollStartSound;
 	StringClass PollAnnounceSound;
@@ -79,15 +89,20 @@ private:
 	StringClass PollFailSound;
 
 	bool AllowVoting;
-	bool AllowTimeVote;
-	bool AllowGameOverVote;
-	bool AllowRestartVote;
-	bool AllowNextMapVote;
-	bool AllowPlayerKickVote;
-	bool AllowNoRepairVote;
+	int TimeVoteMinLevel;
+	int GameOverVoteMinLevel;
+	int RestartVoteMinLevel;
+	int NextMapVoteMinLevel;
+	int PlayerKickVoteMinLevel;
+	int NoRepairVoteMinLevel;
 
 	float TimePollAllowAfter;
 	float TimePollExtraTime;
 
+	float AutoSkipPollAfter;
+	float AutoTimePollBefore;
+	bool AutoTimePollStarted;
+
 	SList<EssentialsForcedVotingPlayerObserverClass> ForceContexts;
+	SList<EssentialsVoteStatusPlayerObserverClass> VoteStatus;
 };

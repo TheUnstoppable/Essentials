@@ -21,6 +21,7 @@
 #include "engine_da.h"
 #include "EssentialsEventClass.h"
 #include "EssentialsForcedVotingPlayerObserverClass.h"
+#include "EssentialsVoteStatusPlayerObserverClass.h"
 #include "EssentialsPlayerDataClass.h"
 #include "EssentialsUtils.h"
 
@@ -32,12 +33,17 @@ EssentialsVotingManagerClass::EssentialsVotingManagerClass() {
 	Instance = this;
 	PollContext = 0;
 	AllowVoting = true;
+	AutoTimePollStarted = false;
 
+	Register_Event(DAEvent::LEVELLOADED);
+	Register_Event(DAEvent::SETTINGSLOADED);
 	Register_Event(DAEvent::PLAYERJOIN);
 	Register_Event(DAEvent::PLAYERLEAVE);
-	Register_Event(DAEvent::SETTINGSLOADED);
 	Register_Event(DAEvent::GAMEOVER);
-	Register_Event(DAEvent::CHATCOMMAND);
+
+	Register_Chat_Command((DAECC)&EssentialsVotingManagerClass::Vote_Command, "!vote|!poll", 0);
+	Register_Chat_Command((DAECC)&EssentialsVotingManagerClass::Yes_Command, "!yes", 0);
+	Register_Chat_Command((DAECC)&EssentialsVotingManagerClass::No_Command, "!no", 0);
 
 	DALogManager::Write_Log("_ESSENTIALS", "Loaded Voting feature.");
 }
@@ -49,8 +55,11 @@ EssentialsVotingManagerClass::~EssentialsVotingManagerClass() {
 }
 
 void EssentialsVotingManagerClass::Player_Join_Event(cPlayer* Player) {
-	if (PollContext && PollContext->Is_Forced()) {
-		Add_Force_Context(Player);
+	if (PollContext) {
+		if (PollContext->Is_Forced()) {
+			Add_Force_Context(Player);
+		}
+		Add_Vote_Status(Player);
 		Force_State_Changed();
 	}
 }
@@ -61,7 +70,17 @@ void EssentialsVotingManagerClass::Player_Leave_Event(cPlayer* Player) {
 		if (PollContext->Is_Forced()) {
 			Remove_Force_Context(Player);
 		}
+		Remove_Vote_Status(Player);
 		Force_State_Changed();
+	}
+}
+
+void EssentialsVotingManagerClass::Level_Loaded_Event() {
+	if (AutoSkipPollAfter > WWMATH_EPSILON) {
+		Start_Timer(5000, AutoSkipPollAfter);
+	}
+	if (AutoTimePollBefore > WWMATH_EPSILON) {
+		Timer_Expired(5001, 0);
 	}
 }
 
@@ -75,15 +94,18 @@ void EssentialsVotingManagerClass::Settings_Loaded_Event() {
 	PollCancelMinLevel = DASettingsManager::Get_Int("Essentials", "PollCancelMinLevel", 3);
 	PollToggleMinLevel = DASettingsManager::Get_Int("Essentials", "PollToggleMinLevel", 3);
 	PollEnableMinLevel = DASettingsManager::Get_Int("Essentials", "PollEnableMinLevel", 3);
-	AllowTimeVote = DASettingsManager::Get_Bool("Essentials", "AllowTimeVote", true);
-	AllowGameOverVote = DASettingsManager::Get_Bool("Essentials", "AllowGameOverVote", true);
-	AllowRestartVote = DASettingsManager::Get_Bool("Essentials", "AllowRestartVote", true);
-	AllowNextMapVote = DASettingsManager::Get_Bool("Essentials", "AllowNextMapVote", true);
-	AllowPlayerKickVote = DASettingsManager::Get_Bool("Essentials", "AllowPlayerKickVote", true);
-	AllowNoRepairVote = DASettingsManager::Get_Bool("Essentials", "AllowNoRepairVote", true);
+	TimeVoteMinLevel = DASettingsManager::Get_Int("Essentials", "TimeVoteMinLevel", 0);
+	GameOverVoteMinLevel = DASettingsManager::Get_Int("Essentials", "GameOverVoteMinLevel", 0);
+	RestartVoteMinLevel = DASettingsManager::Get_Int("Essentials", "RestartVoteMinLevel", 0);
+	NextMapVoteMinLevel = DASettingsManager::Get_Int("Essentials", "NextMapVoteMinLevel", 0);
+	PlayerKickVoteMinLevel = DASettingsManager::Get_Int("Essentials", "PlayerKickVoteMinLevel", 0);
+	NoRepairVoteMinLevel = DASettingsManager::Get_Int("Essentials", "NoRepairVoteMinLevel", 0);
 	TimePollAllowAfter = DASettingsManager::Get_Float("Essentials", "TimePollAllowAfter", 900.f);
 	TimePollExtraTime = DASettingsManager::Get_Float("Essentials", "TimePollExtraTime", 1800.f);
+	AutoSkipPollAfter = DASettingsManager::Get_Float("Essentials", "AutoSkipPollAfter", 5.f);
+	AutoTimePollBefore = DASettingsManager::Get_Float("Essentials", "AutoTimePollBefore", 300.f);
 	PollCooldown = DASettingsManager::Get_Float("Essentials", "PollCooldown", 300.f);
+	RequiredPercentageToPass = clamp(DASettingsManager::Get_Int("Essentials", "RequiredPercentageToPass", 33), 0, 100);
 	DASettingsManager::Get_String(PollStartSound, "Essentials", "PollStartSound", "null");
 	DASettingsManager::Get_String(PollAnnounceSound, "Essentials", "PollAnnounceSound", "null");
 	DASettingsManager::Get_String(PollPassSound, "Essentials", "PollPassSound", "null");
@@ -92,319 +114,7 @@ void EssentialsVotingManagerClass::Settings_Loaded_Event() {
 
 void EssentialsVotingManagerClass::Game_Over_Event() {
 	End_Current_Poll();
-}
-
-bool EssentialsVotingManagerClass::Chat_Command_Event(cPlayer* Player, TextMessageEnum Type, const StringClass& Command, const DATokenClass& Text, int ReceiverID) {
-	if (EqualsIgnoreCase(Command, "!vote") || EqualsIgnoreCase(Command, "!poll")) {
-		if (EqualsIgnoreCase(Text[1], "toggle")) {
-			if (PollToggleMinLevel >= -1) {
-				if (Player->Get_DA_Player()->Get_Access_Level() >= PollToggleMinLevel) {
-					AllowVoting = !AllowVoting;
-					DA::Page_Player(Player, "Voting is now %s.", AllowVoting ? "enabled" : "disabled");
-				}
-				else {
-					DA::Page_Player(Player, "You don't have permission to toggle voting.");
-				}
-			}
-			else {
-				DA::Page_Player(Player, "Toggling voting is disabled.");
-			}
-			return false;
-		}
-		if (AllowVoting) {
-			if (EqualsIgnoreCase(Text[1], "yes")) {
-				if (!Is_Poll_In_Progress()) {
-					DA::Page_Player(Player, "There isn't anything to vote at the moment.");
-					return false;
-				}
-
-				Get_Poll_Context()->Remove_Voter(Player);
-				if (Get_Poll_Context()->Add_Yes_Voter(Player)) {
-					DA::Page_Player(Player, "You have voted Yes.");
-					return true;
-				}
-				else {
-					DA::Page_Player(Player, "Could not register your vote.");
-					return false;
-				}
-			}
-			if (EqualsIgnoreCase(Text[1], "no")) {
-				if (!Is_Poll_In_Progress()) {
-					DA::Page_Player(Player, "There isn't anything to vote at the moment.");
-					return false;
-				}
-
-				Get_Poll_Context()->Remove_Voter(Player);
-				if (Get_Poll_Context()->Add_No_Voter(Player)) {
-					DA::Page_Player(Player, "You have voted No.");
-					return true;
-				}
-				else {
-					DA::Page_Player(Player, "Could not register your vote.");
-					return false;
-				}
-			}
-			if (EqualsIgnoreCase(Text[1], "remove")) {
-				if (!Is_Poll_In_Progress()) {
-					DA::Page_Player(Player, "There isn't anything to vote at the moment.");
-					return false;
-				}
-
-				if (Get_Poll_Context()->Remove_Voter(Player)) {
-					DA::Page_Player(Player, "Your vote has been removed.");
-					return true;
-				}
-				else {
-					DA::Page_Player(Player, "Could not find your vote to the current poll.");
-					return false;
-				}
-			}
-			if (EqualsIgnoreCase(Text[1], "start") || EqualsIgnoreCase(Text[1], "forcestart")) {
-				bool force = EqualsIgnoreCase(Text[1], "forcestart");
-				if (force ? PollForceMinLevel : PollStartMinLevel >= -1) {
-					if (Player->Get_DA_Player()->Get_Access_Level() >= (force ? PollForceMinLevel : PollStartMinLevel)) {
-						if (Is_Timer(3000)) {
-							DA::Page_Player(Player, "Poll cooldown is active, please try again later.");
-							return false;
-						}
-
-						bool ret = true;
-						if (EqualsIgnoreCase(Text[2], "time")) {
-							if (!AllowTimeVote) {
-								DA::Page_Player(Player, "Creating polls of this type is not allowed.");
-								return false;
-							}
-
-							if (!The_Game()->Is_Time_Limit()) {
-								DA::Page_Player(Player, "Can't extend the time on a map with no time limit.");
-								return false;
-							}
-
-							if (The_Game()->Get_Time_Remaining_Seconds() > TimePollAllowAfter) {
-								DA::Page_Player(Player, "Voting for more time is allowed after time left reaches %s.", Format_Seconds_Friendly((int)TimePollAllowAfter));
-								return false;
-							}
-
-							ret = !!Create_Poll(Player, VOTE_TIME, force);
-							if (ret) {
-								DA::Page_Player(Player, "Successfully created a poll with type \"time\".");
-							}
-						}
-						else if (EqualsIgnoreCase(Text[2], "skip") || EqualsIgnoreCase(Text[2], "nextmap") || EqualsIgnoreCase(Text[2], "next") || EqualsIgnoreCase(Text[2], "cyclemap")) {
-							if (!AllowGameOverVote) {
-								DA::Page_Player(Player, "Creating polls of this type is not allowed.");
-								return false;
-							}
-
-							ret = !!Create_Poll(Player, VOTE_GAMEOVER, force);
-							if (ret) {
-								DA::Page_Player(Player, "Successfully created a poll with type \"skip\".");
-							}
-						}
-						else if (EqualsIgnoreCase(Text[2], "restart") || EqualsIgnoreCase(Text[2], "resetmap") || EqualsIgnoreCase(Text[2], "restartmap")) {
-							if (!AllowRestartVote) {
-								DA::Page_Player(Player, "Creating polls of this type is not allowed.");
-								return false;
-							}
-
-							ret = !!Create_Poll(Player, VOTE_RESTARTMAP, force);
-							if (ret) {
-								DA::Page_Player(Player, "Successfully created a poll with type \"restart\".");
-							}
-						}
-						else if (EqualsIgnoreCase(Text[2], "changenext") || EqualsIgnoreCase(Text[2], "snm") || EqualsIgnoreCase(Text[2], "setmap") || EqualsIgnoreCase(Text[2], "map")) {
-							if (!AllowNextMapVote) {
-								DA::Page_Player(Player, "Creating polls of this type is not allowed.");
-								return false;
-							}
-
-							HashTemplateClass<StringClass, GameDefinition> gameDefs;
-							Get_Game_Definitions(gameDefs);
-
-							int matchCount = 0;
-							StringClass mapName;
-
-							for (HashTemplateIterator<StringClass, GameDefinition> it(gameDefs); it; ++it) {
-								if (it.getKey() == Text[3].AsUpper()) {
-									matchCount = 1;
-									mapName = it.getValue().name;
-									break;
-								}
-								if (String_Contains(it.getKey(), Text[3])) {
-									matchCount++;
-									mapName = it.getValue().name;
-								}
-							}
-
-							if (!matchCount) {
-								DA::Page_Player(Player, "Couldn't find any matches for the search term \"%s\".", Text[3]);
-								return false;
-							}
-							if (matchCount > 1) {
-								DA::Page_Player(Player, "Too many matches found for the search term \"%s\", please be more specific.", Text[3]);
-								return false;
-							}
-
-							ret = !!Create_Poll(Player, VOTE_NEXTMAP, force, mapName);
-							if (ret) {
-								DA::Page_Player(Player, "Successfully created a poll with type \"setmap\".");
-							}
-						}
-						else if (EqualsIgnoreCase(Text[2], "kick")) {
-							if (!AllowPlayerKickVote) {
-								DA::Page_Player(Player, "Creating polls of this type is not allowed.");
-								return false;
-							}
-
-							cPlayer* Match = Match_Player(Player, Text[3], false, true);
-							if (!Match) {
-								return false;
-							}
-							if (Match == Player) {
-								DA::Page_Player(Player, "Creating a poll to kick yourself might not be a great idea.");
-								return false;
-							}
-
-							ret = !!Create_Poll(Player, VOTE_PLAYERKICK, force, StringFormat("%d", Match->Get_Id()));
-							if (ret) {
-								DA::Page_Player(Player, "Successfully created a poll with type \"kick\".");
-							}
-						}
-						else if (EqualsIgnoreCase(Text[2], "norepair") || EqualsIgnoreCase(Text[2], "suddendeath") || EqualsIgnoreCase(Text[2], "norep")) {
-							if (!AllowNoRepairVote) {
-								DA::Page_Player(Player, "Creating polls of this type is not allowed.");
-								return false;
-							}
-
-							ret = !!Create_Poll(Player, VOTE_NOREPAIR, force);
-							if (ret) {
-								DA::Page_Player(Player, "Successfully created a poll with type \"norep\".");
-							}
-						}
-						else {
-							if (Text.Size() > 1) {
-								DA::Page_Player(Player, "%s is not a known poll type. Valid types are: \"time, skip, restart, setmap, kick, norep\"", Text[2]);
-							}
-							else {
-								DA::Page_Player(Player, "Usage: !vote start <time/skip/restart/setmap/kick/norep>");
-							}
-							return false;
-						}
-
-						if (!ret) {
-							DA::Page_Player(Player, "Unable to create a poll of type \"%s\".", Text[2]);
-						} else {
-							Start_Timer(3000, PollCooldown);
-						}
-						return ret;
-					}
-					else {
-						DA::Page_Player(Player, "You don't have permission to start a new poll.");
-						return false;
-					}
-				}
-				else {
-					DA::Page_Player(Player, "Creating new polls are disabled.");
-					return false;
-				}
-			}
-			if (EqualsIgnoreCase(Text[1], "cancel")) {
-				if (PollCancelMinLevel >= -1) {
-					if (Player->Get_DA_Player()->Get_Access_Level() >= PollCancelMinLevel) {
-						if (End_Current_Poll()) {
-							DA::Page_Player(Player, "Successfully cancelled ongoing poll.");
-							return true;
-						}
-						else {
-							DA::Page_Player(Player, "There isn't an ongoing poll at the moment.");
-							return false;
-						}
-					}
-					else {
-						DA::Page_Player(Player, "You don't have permission to cancel an ongoing poll.");
-						return false;
-					}
-				}
-				else {
-					DA::Page_Player(Player, "Cancelling polls are disabled.");
-				}
-			}
-			if (EqualsIgnoreCase(Text[1], "enable")) {
-				if (PollEnableMinLevel >= -1) {
-					if (Player->Get_DA_Player()->Get_Access_Level() >= PollEnableMinLevel) {
-						Stop_Timer(3000);
-						DA::Page_Player(Player, "Successfully expired the poll cooldown.");
-						return true;
-					}
-					else {
-						DA::Page_Player(Player, "You don't have permission to enable polls.");
-						return false;
-					}
-				}
-				else {
-					DA::Page_Player(Player, "Enabling polls are disabled.");
-				}
-			}
-
-			if (Text.Size() > 0) {
-				DA::Page_Player(Player, "%s is an invalid option. Valid options are: yes, no, remove, start, cancel, enable.", Text[1]);
-			}
-			else {
-				DA::Page_Player(Player, "Usage: !vote <yes/no/remove/start/cancel/toggle/enable>");
-			}
-			return false;
-		}
-		else {
-			DA::Page_Player(Player, "Voting has been temporarily disabled by the staff.", Text[1]);
-			return false;
-		}
-	}
-	if (EqualsIgnoreCase(Command, "!yes")) {
-		if (AllowVoting) {
-			if (!Is_Poll_In_Progress()) {
-				DA::Page_Player(Player, "There isn't anything to vote at the moment.");
-				return false;
-			}
-
-			Get_Poll_Context()->Remove_Voter(Player);
-			if (Get_Poll_Context()->Add_Yes_Voter(Player)) {
-				DA::Page_Player(Player, "You have voted Yes.");
-				return true;
-			}
-			else {
-				DA::Page_Player(Player, "Could not register your vote.");
-				return false;
-			}
-		}
-		else {
-			DA::Page_Player(Player, "Voting has been temporarily disabled by the staff.", Text[1]);
-			return false;
-		}
-	}
-	if (EqualsIgnoreCase(Command, "!no")) {
-		if (AllowVoting) {
-			if (!Is_Poll_In_Progress()) {
-				DA::Page_Player(Player, "There isn't anything to vote at the moment.");
-				return false;
-			}
-
-			Get_Poll_Context()->Remove_Voter(Player);
-			if (Get_Poll_Context()->Add_No_Voter(Player)) {
-				DA::Page_Player(Player, "You have voted No.");
-				return true;
-			}
-			else {
-				DA::Page_Player(Player, "Could not register your vote.");
-				return false;
-			}
-		}
-		else {
-			DA::Page_Player(Player, "Voting has been temporarily disabled by the staff.", Text[1]);
-			return false;
-		}
-	}
-
-	return true;
+	Stop_Timer(5001);
 }
 
 void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
@@ -423,8 +133,8 @@ void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
 	}
 	else if (Number == 1001) {
 		int yes = Get_Poll_Context()->Get_Yes_Count(), no = Get_Poll_Context()->Get_No_Count();
-		bool one_third = ((float)(yes + no) >= The_Game()->Get_Current_Players() / 3.f);
-		bool pass = one_third && yes > no;
+		bool percentage = ((float)(yes + no) >= ((RequiredPercentageToPass / 100.f) * The_Game()->Get_Current_Players()));
+		bool pass = percentage && yes > no;
 
 		DA::Host_Message("Poll to %s is over. [Yes Votes: %d | No Votes: %d]", Get_Action_Description(), yes, no);
 		DA::Create_2D_Sound(pass ? PollPassSound : PollFailSound);
@@ -432,8 +142,8 @@ void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
 		if (pass) {
 			DA::Host_Message("Vote has PASSED, there are %d more yes votes than no votes.", abs(yes - no));
 		} else {
-			if (!one_third) {
-				DA::Host_Message("Vote has FAILED, at least one third of the players must contribute to the poll.");
+			if (!percentage) {
+				DA::Host_Message("Vote has FAILED, at least %d%% of the players must contribute to the poll.", RequiredPercentageToPass);
 			} else if (yes < no) {
 				DA::Host_Message("Vote has FAILED, there are %d more no votes than yes votes.", abs(yes - no));
 			} else {
@@ -475,6 +185,338 @@ void EssentialsVotingManagerClass::Timer_Expired(int Number, unsigned Data) {
 	else if (Number == 4001) {
 		End_Current_Poll();
 	}
+	else if (Number == 5000) {
+		Create_Poll(0, VOTE_GAMEOVER);
+	}
+	else if (Number == 5001) {
+		if (The_Game() && The_Game()->Get_Time_Remaining_Seconds() <= AutoTimePollBefore) {
+			if (!AutoTimePollStarted) {
+				Create_Poll(0, VOTE_TIME);
+				AutoTimePollStarted = true;
+			}
+		} else {
+			AutoTimePollStarted = false;
+		}
+		Start_Timer(5001, 1.0f);
+	}
+}
+
+bool EssentialsVotingManagerClass::Vote_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType) {
+	if (EqualsIgnoreCase(Text[1], "toggle")) {
+		if (PollToggleMinLevel >= -1) {
+			if (Player->Get_DA_Player()->Get_Access_Level() >= PollToggleMinLevel) {
+				AllowVoting = !AllowVoting;
+				DA::Page_Player(Player, "Voting is now %s.", AllowVoting ? "enabled" : "disabled");
+			}
+			else {
+				DA::Page_Player(Player, "You don't have permission to toggle voting.");
+			}
+		}
+		else {
+			DA::Page_Player(Player, "Toggling voting is disabled.");
+		}
+		return false;
+	}
+	if (AllowVoting) {
+		if (EqualsIgnoreCase(Text[1], "yes")) {
+			if (!Is_Poll_In_Progress()) {
+				DA::Page_Player(Player, "There isn't anything to vote at the moment.");
+				return false;
+			}
+
+			Get_Poll_Context()->Remove_Voter(Player);
+			if (Get_Poll_Context()->Add_Yes_Voter(Player)) {
+				DA::Page_Player(Player, "You have voted Yes.");
+				return true;
+			}
+			else {
+				DA::Page_Player(Player, "Could not register your vote.");
+				return false;
+			}
+		}
+		if (EqualsIgnoreCase(Text[1], "no")) {
+			if (!Is_Poll_In_Progress()) {
+				DA::Page_Player(Player, "There isn't anything to vote at the moment.");
+				return false;
+			}
+
+			Get_Poll_Context()->Remove_Voter(Player);
+			if (Get_Poll_Context()->Add_No_Voter(Player)) {
+				DA::Page_Player(Player, "You have voted No.");
+				return true;
+			}
+			else {
+				DA::Page_Player(Player, "Could not register your vote.");
+				return false;
+			}
+		}
+		if (EqualsIgnoreCase(Text[1], "remove")) {
+			if (!Is_Poll_In_Progress()) {
+				DA::Page_Player(Player, "There isn't anything to vote at the moment.");
+				return false;
+			}
+
+			if (Get_Poll_Context()->Remove_Voter(Player)) {
+				DA::Page_Player(Player, "Your vote has been removed.");
+				return true;
+			}
+			else {
+				DA::Page_Player(Player, "Could not find your vote to the current poll.");
+				return false;
+			}
+		}
+		if (EqualsIgnoreCase(Text[1], "start") || EqualsIgnoreCase(Text[1], "forcestart")) {
+			bool force = EqualsIgnoreCase(Text[1], "forcestart");
+			if ((force ? PollForceMinLevel : PollStartMinLevel) >= -1) {
+				int AccessLevel = Player->Get_DA_Player()->Get_Access_Level();
+				if (AccessLevel >= (force ? PollForceMinLevel : PollStartMinLevel)) {
+					if (Is_Poll_In_Progress()) {
+						DA::Page_Player(Player, "Another poll is currently in progress, please try again after it is over.");
+						return false;
+					}
+
+					if (Is_Timer(3000)) {
+						DA::Page_Player(Player, "Poll cooldown is active, please try again later.");
+						return false;
+					}
+
+					bool ret = true;
+					if (EqualsIgnoreCase(Text[2], "time")) {
+						if (AccessLevel < TimeVoteMinLevel) {
+							DA::Page_Player(Player, "You don't have permission to create this type of polls.");
+							return false;
+						}
+
+						if (!The_Game()->Is_Time_Limit()) {
+							DA::Page_Player(Player, "Can't extend the time on a map with no time limit.");
+							return false;
+						}
+
+						if (The_Game()->Get_Time_Remaining_Seconds() > TimePollAllowAfter) {
+							DA::Page_Player(Player, "Voting for more time is allowed after time left reaches %s.", Format_Seconds_Friendly((int)TimePollAllowAfter));
+							return false;
+						}
+
+						ret = !!Create_Poll(Player, VOTE_TIME, force);
+						if (ret) {
+							DA::Page_Player(Player, "Successfully created a poll with type \"time\".");
+						}
+					}
+					else if (EqualsIgnoreCase(Text[2], "skip") || EqualsIgnoreCase(Text[2], "nextmap") || EqualsIgnoreCase(Text[2], "next") || EqualsIgnoreCase(Text[2], "cyclemap")) {
+						if (AccessLevel < GameOverVoteMinLevel) {
+							DA::Page_Player(Player, "You don't have permission to create this type of polls.");
+							return false;
+						}
+
+						ret = !!Create_Poll(Player, VOTE_GAMEOVER, force);
+						if (ret) {
+							DA::Page_Player(Player, "Successfully created a poll with type \"skip\".");
+						}
+					}
+					else if (EqualsIgnoreCase(Text[2], "restart") || EqualsIgnoreCase(Text[2], "resetmap") || EqualsIgnoreCase(Text[2], "restartmap")) {
+						if (AccessLevel < RestartVoteMinLevel) {
+							DA::Page_Player(Player, "You don't have permission to create this type of polls.");
+							return false;
+						}
+
+						ret = !!Create_Poll(Player, VOTE_RESTARTMAP, force);
+						if (ret) {
+							DA::Page_Player(Player, "Successfully created a poll with type \"restart\".");
+						}
+					}
+					else if (EqualsIgnoreCase(Text[2], "changenext") || EqualsIgnoreCase(Text[2], "snm") || EqualsIgnoreCase(Text[2], "setmap") || EqualsIgnoreCase(Text[2], "map")) {
+						if (AccessLevel < NextMapVoteMinLevel) {
+							DA::Page_Player(Player, "You don't have permission to create this type of polls.");
+							return false;
+						}
+
+						HashTemplateClass<StringClass, GameDefinition> gameDefs;
+						Get_Game_Definitions(gameDefs);
+
+						int matchCount = 0;
+						StringClass mapName;
+
+						for (HashTemplateIterator<StringClass, GameDefinition> it(gameDefs); it; ++it) {
+							if (it.getKey() == Text[3].AsUpper()) {
+								matchCount = 1;
+								mapName = it.getValue().name;
+								break;
+							}
+							if (String_Contains(it.getKey(), Text[3])) {
+								matchCount++;
+								mapName = it.getValue().name;
+							}
+						}
+
+						if (!matchCount) {
+							DA::Page_Player(Player, "Couldn't find any matches for the search term \"%s\".", Text[3]);
+							return false;
+						}
+						if (matchCount > 1) {
+							DA::Page_Player(Player, "Too many matches found for the search term \"%s\", please be more specific.", Text[3]);
+							return false;
+						}
+
+						ret = !!Create_Poll(Player, VOTE_NEXTMAP, force, mapName);
+						if (ret) {
+							DA::Page_Player(Player, "Successfully created a poll with type \"setmap\".");
+						}
+					}
+					else if (EqualsIgnoreCase(Text[2], "kick")) {
+						if (AccessLevel < PlayerKickVoteMinLevel) {
+							DA::Page_Player(Player, "You don't have permission to create this type of polls.");
+							return false;
+						}
+
+						cPlayer* Match = Match_Player(Player, Text[3], false, true);
+						if (!Match) {
+							return false;
+						}
+						if (Match == Player) {
+							DA::Page_Player(Player, "Creating a poll to kick yourself might not be a great idea.");
+							return false;
+						}
+
+						ret = !!Create_Poll(Player, VOTE_PLAYERKICK, force, StringFormat("%d", Match->Get_Id()));
+						if (ret) {
+							DA::Page_Player(Player, "Successfully created a poll with type \"kick\".");
+						}
+					}
+					else if (EqualsIgnoreCase(Text[2], "norepair") || EqualsIgnoreCase(Text[2], "suddendeath") || EqualsIgnoreCase(Text[2], "norep")) {
+						if (AccessLevel < NoRepairVoteMinLevel) {
+							DA::Page_Player(Player, "You don't have permission to create this type of polls.");
+							return false;
+						}
+
+						ret = !!Create_Poll(Player, VOTE_NOREPAIR, force);
+						if (ret) {
+							DA::Page_Player(Player, "Successfully created a poll with type \"norep\".");
+						}
+					}
+					else {
+						if (Text.Size() > 1) {
+							DA::Page_Player(Player, "%s is not a known poll type. Valid types are: \"time, skip, restart, setmap, kick, norep\"", Text[2]);
+						}
+						else {
+							DA::Page_Player(Player, "Usage: !vote start <time/skip/restart/setmap/kick/norep>");
+						}
+						return false;
+					}
+
+					if (!ret) {
+						DA::Page_Player(Player, "Unable to create a poll of type \"%s\".", Text[2]);
+					}
+					else {
+						Start_Timer(3000, PollCooldown);
+					}
+					return ret;
+				}
+				else {
+					DA::Page_Player(Player, "You don't have permission to start a new poll.");
+					return false;
+				}
+			}
+			else {
+				DA::Page_Player(Player, "Creating new polls are disabled.");
+				return false;
+			}
+		}
+		if (EqualsIgnoreCase(Text[1], "cancel")) {
+			if (PollCancelMinLevel >= -1) {
+				if (Player->Get_DA_Player()->Get_Access_Level() >= PollCancelMinLevel) {
+					if (End_Current_Poll()) {
+						DA::Page_Player(Player, "Successfully cancelled ongoing poll.");
+						return true;
+					}
+					else {
+						DA::Page_Player(Player, "There isn't an ongoing poll at the moment.");
+						return false;
+					}
+				}
+				else {
+					DA::Page_Player(Player, "You don't have permission to cancel an ongoing poll.");
+					return false;
+				}
+			}
+			else {
+				DA::Page_Player(Player, "Cancelling polls are disabled.");
+			}
+		}
+		if (EqualsIgnoreCase(Text[1], "enable")) {
+			if (PollEnableMinLevel >= -1) {
+				if (Player->Get_DA_Player()->Get_Access_Level() >= PollEnableMinLevel) {
+					Stop_Timer(3000);
+					DA::Page_Player(Player, "Successfully expired the poll cooldown.");
+					return true;
+				}
+				else {
+					DA::Page_Player(Player, "You don't have permission to enable polls.");
+					return false;
+				}
+			}
+			else {
+				DA::Page_Player(Player, "Enabling polls are disabled.");
+			}
+		}
+
+		if (Text.Size() > 0) {
+			DA::Page_Player(Player, "%s is an invalid option. Valid options are: yes, no, remove, start, forcestart, cancel, enable.", Text[1]);
+		}
+		else {
+			DA::Page_Player(Player, "Usage: !vote <yes/no/remove/start/forcestart/cancel/toggle/enable>");
+		}
+		return false;
+	}
+	else {
+		DA::Page_Player(Player, "Voting has been temporarily disabled by the staff.", Text[1]);
+		return false;
+	}
+}
+
+bool EssentialsVotingManagerClass::Yes_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType) {
+	if (AllowVoting) {
+		if (!Is_Poll_In_Progress()) {
+			DA::Page_Player(Player, "There isn't anything to vote at the moment.");
+			return false;
+		}
+
+		Get_Poll_Context()->Remove_Voter(Player);
+		if (Get_Poll_Context()->Add_Yes_Voter(Player)) {
+			DA::Page_Player(Player, "You have voted Yes.");
+			return true;
+		}
+		else {
+			DA::Page_Player(Player, "Could not register your vote.");
+			return false;
+		}
+	}
+	else {
+		DA::Page_Player(Player, "Voting has been temporarily disabled by the staff.", Text[1]);
+		return false;
+	}
+}
+
+bool EssentialsVotingManagerClass::No_Command(cPlayer* Player, const DATokenClass& Text, TextMessageEnum ChatType) {
+	if (AllowVoting) {
+		if (!Is_Poll_In_Progress()) {
+			DA::Page_Player(Player, "There isn't anything to vote at the moment.");
+			return false;
+		}
+
+		Get_Poll_Context()->Remove_Voter(Player);
+		if (Get_Poll_Context()->Add_No_Voter(Player)) {
+			DA::Page_Player(Player, "You have voted No.");
+			return true;
+		}
+		else {
+			DA::Page_Player(Player, "Could not register your vote.");
+			return false;
+		}
+	}
+	else {
+		DA::Page_Player(Player, "Voting has been temporarily disabled by the staff.", Text[1]);
+		return false;
+	}
 }
 
 EssentialsPollClass* EssentialsVotingManagerClass::Create_Poll(cPlayer* Starter, EssentialsVotingType Type, bool Force, const char* Data) {
@@ -495,9 +537,14 @@ EssentialsPollClass* EssentialsVotingManagerClass::Create_Poll(cPlayer* Starter,
 		}
 
 		Set_Gameplay_Allowed(false);
-
-		Start_Timer(1002, 0.25f, true, 0);
 	}
+
+	for (SLNode<cPlayer>* n = Get_Player_List()->Head(); n; n = n->Next()) {
+		if (n->Data()->Get_Is_Active() && n->Data()->Get_Is_In_Game())
+			Add_Vote_Status(n->Data());
+	}
+
+	Start_Timer(1002, 0.25f, true, 0);
 
 	Timer_Expired(1000, 1);
 	Start_Timer(1001, Force ? ForcedPollDuration : PollDuration);
@@ -513,6 +560,8 @@ bool EssentialsVotingManagerClass::End_Current_Poll() {
 		Set_Gameplay_Allowed(true);
 		Clear_Force_Contexts();
 	}
+
+	Clear_Vote_Status();
 
 	Stop_Timer(1000);
 	Stop_Timer(1001);
@@ -570,6 +619,10 @@ void EssentialsVotingManagerClass::Force_State_Changed() {
 	for (SLNode<EssentialsForcedVotingPlayerObserverClass>* Node = ForceContexts.Head(); Node; Node = Node->Next()) {
 		Node->Data()->Update_Data();
 	}
+
+	for (SLNode<EssentialsVoteStatusPlayerObserverClass>* Node = VoteStatus.Head(); Node; Node = Node->Next()) {
+		Node->Data()->Update_Data();
+	}
 }
 
 void EssentialsVotingManagerClass::Add_Force_Context(cPlayer* Player) {
@@ -595,13 +648,47 @@ void EssentialsVotingManagerClass::Remove_Force_Context(cPlayer* Player) {
 		if (Node->Data()->Get_Owner() == Player) {
 			Node->Data()->Set_Delete_Pending();
 			ForceContexts.Remove(Node->Data());
-			return;
+			break;
 		}
 	}
 }
 
 void EssentialsVotingManagerClass::Clear_Force_Contexts() {
 	while (EssentialsForcedVotingPlayerObserverClass* Node = ForceContexts.Remove_Head()) {
+		Node->Set_Delete_Pending();
+	}
+}
+
+void EssentialsVotingManagerClass::Add_Vote_Status(cPlayer* Player) {
+	if (!Is_Poll_In_Progress()) {
+		return;
+	}
+
+	for (SLNode<EssentialsVoteStatusPlayerObserverClass>* Node = VoteStatus.Head(); Node; Node = Node->Next()) {
+		if (Node->Data()->Get_Owner() == Player) {
+			return;
+		}
+	}
+
+	EssentialsVoteStatusPlayerObserverClass* Context = new EssentialsVoteStatusPlayerObserverClass;
+	Player->Get_DA_Player()->Add_Observer(Context);
+	Context->On_Poll_Start(PollContext);
+
+	VoteStatus.Add_Tail(Context);
+}
+
+void EssentialsVotingManagerClass::Remove_Vote_Status(cPlayer* Player) {
+	for (SLNode<EssentialsVoteStatusPlayerObserverClass>* Node = VoteStatus.Head(); Node; Node = Node->Next()) {
+		if (Node->Data()->Get_Owner() == Player) {
+			Node->Data()->Set_Delete_Pending();
+			VoteStatus.Remove(Node->Data());
+			break;
+		}
+	}
+}
+
+void EssentialsVotingManagerClass::Clear_Vote_Status() {
+	while (EssentialsVoteStatusPlayerObserverClass* Node = VoteStatus.Remove_Head()) {
 		Node->Set_Delete_Pending();
 	}
 }
