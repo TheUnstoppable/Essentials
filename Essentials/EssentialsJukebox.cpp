@@ -215,7 +215,8 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 			if (Text.Size() >= 2) {
 				if (!Data->Get_IsStopped()) {
 					EssentialsJukeboxMusic* music;
-					int found = Find_Music(Text[2], music);
+					const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+					int found = Find_Music(Text(2), music);
 					if (found < 1) {
 						DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Could not find any music with specified search term.");
 					}
@@ -239,7 +240,8 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 		else if (Text[1] == "add") {
 			if (Text.Size() >= 2) {
 				EssentialsJukeboxMusic* music;
-				int found = Find_Music(Text[2], music);
+				const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+				int found = Find_Music(Text(2), music);
 				if (found < 1) {
 					DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Could not find any music with specified search term.");
 				}
@@ -264,7 +266,8 @@ bool EssentialsJukeboxClass::Jukebox_Command(cPlayer* Player, const DATokenClass
 		else if (Text[1] == "remove") {
 			if (Text.Size() >= 2) {
 				EssentialsJukeboxMusic* music;
-				int found = Find_Music(Text[2], music);
+				const_cast<StringClass&>(Text.Get_Delimiter()) = " ";
+				int found = Find_Music(Text(2), music);
 				if (found < 1) {
 					DA::Private_Color_Message(Player, JUKEBOXCOLOR, "[Jukebox] Could not find any music with specified search term.");
 				}
@@ -345,17 +348,13 @@ void EssentialsJukeboxClass::Jukebox_Shuffle(cPlayer* Player) {
 }
 
 void EssentialsJukeboxClass::Clear_Musics() {
-	for (SLNode<EssentialsJukeboxMusic>* Node = Musics.Head(); Node; Node = Node->Next()) {
-		delete Node->Data();
-	}
-
-	Musics.Remove_All();
+	while (EssentialsJukeboxMusic* Music = Musics.Remove_Head())
+		delete Music;
 }
 
 void EssentialsJukeboxClass::Reset_Playlists() {
 	for(SLNode<cPlayer>* z = Get_Player_List()->Head(); z; z = z->Next()) {
-		cPlayer* Player = z->Data();
-		if (Player && Player->Get_Is_In_Game() && Player->Is_Active()) {
+		if (cPlayer* Player = z->Data()) {
 			if (EssentialsPlayerDataClass* Data = EssentialsEventClass::Instance->Get_Player_Data(Player)) {
 				Data->Clear_Queue();
 				Data->Set_CurrentMusic(0);
