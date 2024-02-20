@@ -512,7 +512,7 @@ ConnectionAcceptanceFilter::STATUS EssentialsEventClass::Connection_Request_Even
 	{
 		Hash = "00000000000000000000000000000000";
 	}
-	Line.Format("%ws requested to join server. [id=%d,ip=%s,ser=%s,ver=%f,rev=%d,key=%d,pwd=%s]", Request.clientName.Peek_Buffer(), Request.clientId, Long_To_IP(Request.clientAddress.sin_addr.s_addr).Peek_Buffer(), Request.clientSerialHash.Peek_Buffer(), Request.clientVersion, Request.clientRevisionNumber, Request.clientExeKey, Hash);
+	Line.Format("%ws requested to join server. [id=%d,ip=%s,ser=%s,ver=%f,rev=%d,key=%d,pwd=%s,hwid=%s]", Request.clientName.Peek_Buffer(), Request.clientId, Long_To_IP(Request.clientAddress.sin_addr.s_addr).Peek_Buffer(), Request.clientSerialHash.Peek_Buffer(), Request.clientVersion, Request.clientRevisionNumber, Request.clientExeKey, Hash.Peek_Buffer(), Request.clientHardwareIdentifier.Peek_Buffer());
 	DALogManager::Write_Log("_CONNECTION", Line.Peek_Buffer());
 
 	if (ShowConnectionRequestMessages) {
