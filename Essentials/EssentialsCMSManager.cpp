@@ -22,6 +22,7 @@
 
 EssentialsCMSHandler* EssentialsCMSHandler::Instance = 0;
 SList<EssentialsCMSDefinition> EssentialsCMSManager::Definitions;
+SList<EssentialsCMSView> EssentialsCMSManager::Views;
 
 EssentialsCMSHandler::EssentialsCMSHandler() {
 	// If the assert below hits, then this singleton
@@ -48,18 +49,12 @@ bool EssentialsCMSHandler::Chat_Event(cPlayer* Player, TextMessageEnum Type, con
 	if (EssentialsCMSManager::Is_Initialized()) {
 		auto Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::CHATPHRASEEXACT, Message);
 		if (Def) {
-			EssentialsCMSView* View = Def->Create_Instance();
-			if (!View->Perform(Player->Get_Id())) {
-				Console_Output("[Essentials] Failed to perform CMS view \"%s\".\n", View->Get_Definition() ? View->Get_Definition()->Get_Name() : "**Missing Definition**");
-			}
+			PERFORM_VIEW(Player, Def, View, true)
 			return true;
 		}
 		Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::CHATPHRASEMATCH, Message);
 		if (Def) {
-			EssentialsCMSView* View = Def->Create_Instance();
-			if (!View->Perform(Player->Get_Id())) {
-				Console_Output("[Essentials] Failed to perform CMS view \"%s\".\n", View->Get_Definition() ? View->Get_Definition()->Get_Name() : "**Missing Definition**");
-			}
+			PERFORM_VIEW(Player, Def, View, true)
 			return true;
 		}
 	}
@@ -70,10 +65,7 @@ bool EssentialsCMSHandler::Key_Hook_Event(cPlayer* Player, const StringClass& Ke
 	if (EssentialsCMSManager::Is_Initialized()) {
 		auto Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::KEYHOOK, Key);
 		if (Def) {
-			EssentialsCMSView* View = Def->Create_Instance();
-			if (!View->Perform(Player->Get_Id())) {
-				Console_Output("[Essentials] Failed to perform CMS view \"%s\".\n", View->Get_Definition() ? View->Get_Definition()->Get_Name() : "**Missing Definition**");
-			}
+			PERFORM_VIEW(Player, Def, View, true)
 			return true;
 		}
 	}
@@ -84,10 +76,7 @@ void EssentialsCMSHandler::Player_Join_Event(cPlayer* Player) {
 	if (EssentialsCMSManager::Is_Initialized()) {
 		auto Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::PLAYERJOIN, "");
 		if (Def) {
-			EssentialsCMSView* View = Def->Create_Instance();
-			if (!View->Perform(Player->Get_Id())) {
-				Console_Output("[Essentials] Failed to perform CMS view \"%s\".\n", View->Get_Definition() ? View->Get_Definition()->Get_Name() : "**Missing Definition**");
-			}
+			PERFORM_VIEW(Player, Def, View, true)
 		}
 	}
 }
@@ -96,9 +85,10 @@ void EssentialsCMSHandler::Dialog_Event(cPlayer* Player, DialogMessageType Type,
 	if (!Dialog) return;
 
 	EssentialsCMSDialogView* View = 0;
-	for(int i = 0; i < Views.Count(); ++i) {
-		if (Views[i]->As_DialogContent() && ((EssentialsCMSDialogView*)Views[i])->Get_Dialog_ID() == Dialog->Get_Dialog_ID()) {
-			View = Views[i]->As_DialogContent();
+	for (SLNode<EssentialsCMSView>* v = EssentialsCMSManager::Get_Views().Head(); v; v = v->Next()) {
+		EssentialsCMSView* NodeView = v->Data();
+		if (NodeView && NodeView->As_DialogContent() && ((EssentialsCMSDialogView*)NodeView)->Get_Dialog_ID() == Dialog->Get_Dialog_ID()) {
+			View = NodeView->As_DialogContent();
 			break;
 		}
 	}
@@ -107,10 +97,16 @@ void EssentialsCMSHandler::Dialog_Event(cPlayer* Player, DialogMessageType Type,
 
 	if (Type == MESSAGE_TYPE_DIALOG_ESCAPE && ((EssentialsCMSDialogDefinition*)View->Get_Definition())->Close_On_Escape()) {
 		Delete_Dialog(Dialog);
+		if (View->Auto_Delete_After_Perform()) {
+			delete View;
+		}
 		return;
 	}
 	if (Type == MESSAGE_TYPE_CONTROL_MOUSE_CLICK && Control->Get_Control_Type() == CONTROLTYPE_BUTTON) {
 		Delete_Dialog(Dialog);
+		if (View->Auto_Delete_After_Perform()) {
+			delete View;
+		}
 		return;
 	}
 }
@@ -682,6 +678,9 @@ void EssentialsCMSManager::Reload() {
 }
 
 void EssentialsCMSManager::Cleanup() {
+	while(auto data = Views.Remove_Head()) {
+		delete data;
+	}
 	while (auto data = Definitions.Remove_Head()) {
 		delete data;
 	}

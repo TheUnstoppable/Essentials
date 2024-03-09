@@ -14,8 +14,17 @@
 #include "EssentialsCMSDefinition.h"
 #include "EssentialsCMSView.h"
 
+#define PERFORM_VIEW(Player, Def, View, AutoDelete) \
+	EssentialsCMSView* View = (Def)->Create_Instance(); \
+	if (!View->Perform((Player)->Get_Id())) { \
+		Console_Output("[Essentials] Failed to perform CMS view \"%s\".\n", View->Get_Definition() ? View->Get_Definition()->Get_Name().Peek_Buffer() : "**Missing Definition**"); \
+		delete View; \
+	} else { \
+		if ((AutoDelete) && View->Auto_Delete_After_Perform()) delete View; \
+	}
+
 class ESSENTIALS_API EssentialsCMSHandler : public DAEventClass {
-	friend class EssentialsCMSView;
+	//friend class EssentialsCMSView;
 
 public:
 	EssentialsCMSHandler();
@@ -29,16 +38,13 @@ public:
 	virtual void Player_Join_Event(cPlayer* Player);
 	virtual void Dialog_Event(cPlayer* Player, DialogMessageType Type, ScriptedDialogClass* Dialog, ScriptedControlClass* Control);
 
-protected:
-	void Add_View(EssentialsCMSView* v) { Views.Add(v); }
-	void Remove_View(EssentialsCMSView* v) { Views.DeleteObj(v); }
-
 private:
 	static EssentialsCMSHandler* Instance;
-	DynamicVectorClass<EssentialsCMSView*> Views;
 };
 
 class ESSENTIALS_API EssentialsCMSManager {
+	friend class EssentialsCMSView;
+
 public:
 	static void Init();
 	static void Shutdown();
@@ -49,6 +55,11 @@ public:
 	static void Reload();
 	static void Cleanup();
 
-protected:
+	static void Add_View(EssentialsCMSView* v) { Views.Add_Head(v); }
+	static const SList<EssentialsCMSView>& Get_Views() { return Views; }
+	static void Remove_View(EssentialsCMSView* v) { Views.Remove(v); }
+
+private:
 	static SList<EssentialsCMSDefinition> Definitions;
+	static SList<EssentialsCMSView> Views;
 };

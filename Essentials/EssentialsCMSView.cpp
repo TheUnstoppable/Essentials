@@ -21,11 +21,19 @@
 #include "cScTextObj.h"
 
 EssentialsCMSView::EssentialsCMSView(EssentialsCMSDefinition* Definition) : Definition(Definition) {
-	EssentialsCMSHandler::Get_Instance()->Add_View(this);
+	EssentialsCMSManager::Add_View(this);
 }
 
 EssentialsCMSView::~EssentialsCMSView() {
-	EssentialsCMSHandler::Get_Instance()->Remove_View(this);
+	EssentialsCMSManager::Remove_View(this);
+}
+
+EssentialsCMSDialogView::~EssentialsCMSDialogView() {
+	if (ScriptedDialogClass* Dialog = Find_Dialog(DialogID)) {
+		if (Find_Player(Dialog->Get_Client_ID())) {
+			Delete_Dialog(Dialog);
+		}
+	}
 }
 
 bool EssentialsCMSDialogView::Perform(int playerId) {

@@ -27,6 +27,7 @@ public:
 	virtual EssentialsCMSChatView* As_ChatContent() { return NULL; }
 	const EssentialsCMSDefinition* Get_Definition() { return Definition; }
 	virtual bool Perform(int playerId) = 0;
+	virtual bool Auto_Delete_After_Perform() = 0;
 
 protected:
 	EssentialsCMSDefinition* Definition;
@@ -38,8 +39,10 @@ private:
 class ESSENTIALS_API EssentialsCMSDialogView : public EssentialsCMSView {
 	friend class EssentialsCMSDialogDefinition;
 public:
+	virtual ~EssentialsCMSDialogView();
 	virtual EssentialsCMSDialogView* As_DialogContent() { return this; }
 	virtual bool Perform(int playerId);
+	virtual bool Auto_Delete_After_Perform() { return false; }
 
 	int Get_Dialog_ID() const { return DialogID; }
 
@@ -56,6 +59,7 @@ class ESSENTIALS_API EssentialsCMSChatView : public EssentialsCMSView {
 public:
 	virtual EssentialsCMSChatView* As_ChatContent() { return this; }
 	virtual bool Perform(int playerId);
+	virtual bool Auto_Delete_After_Perform() { return true; }
 
 protected:
 	EssentialsCMSChatView() : EssentialsCMSView(0) {}
