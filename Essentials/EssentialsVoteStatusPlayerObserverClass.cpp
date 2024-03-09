@@ -66,7 +66,7 @@ void EssentialsVoteStatusPlayerObserverClass::Create_Surface() {
 	SurfaceID = Surface->Get_Surface_ID();
 
 	RectClass bgRect(BOX_BG);
-	bgRect.Scale(Surface->Get_Boundary_Area());
+	bgRect.Scale(Vector2(Surface->Get_Boundary_Area().Width(), Surface->Get_Boundary_Area().Height()));
 	bgRect.Snap_To_Units(Vector2(1,1));
 
 	RectClass titleRect(BOX_TITLE);
@@ -145,7 +145,6 @@ void EssentialsVoteStatusPlayerObserverClass::Create_Surface() {
 	titleRect.Top += 2; titleRect.Bottom -= 2;
 
 	HUDTextElementClass* Title = (HUDTextElementClass*)Surface->Create_Element(HUD_ELEMENT_TEXT);
-	Title->Set_Clipping_Enabled(true);
 	Title->Set_Clipping_Area(titleRect);
 	Title->Set_Color(255, 255, 255, 255);
 	Title->Set_Font(HUD_FONT_BIG_BODY);
@@ -160,7 +159,6 @@ void EssentialsVoteStatusPlayerObserverClass::Create_Surface() {
 	descRect.Top += 2; descRect.Bottom -= 2;
 
 	HUDTextElementClass* Desc = (HUDTextElementClass*)Surface->Create_Element(HUD_ELEMENT_TEXT);
-	Desc->Set_Clipping_Enabled(true);
 	Desc->Set_Clipping_Area(descRect);
 	Desc->Set_Color(255, 255, 255, 255);
 	Desc->Set_Font(HUD_FONT_NORMAL_BODY);
@@ -173,7 +171,6 @@ void EssentialsVoteStatusPlayerObserverClass::Create_Surface() {
 	YesRectID = YesBackground->Get_Element_ID();
 
 	HUDTextElementClass* YesText = (HUDTextElementClass*)Surface->Create_Element(HUD_ELEMENT_TEXT);
-	YesText->Set_Clipping_Enabled(true);
 	YesText->Set_Clipping_Area(yesTextRect);
 	YesText->Set_Color(255, 255, 255, 255);
 	YesText->Set_Font(HUD_FONT_SMALL_HEADER);
@@ -186,7 +183,6 @@ void EssentialsVoteStatusPlayerObserverClass::Create_Surface() {
 	NoRectID = NoBackground->Get_Element_ID();
 
 	HUDTextElementClass* NoText = (HUDTextElementClass*)Surface->Create_Element(HUD_ELEMENT_TEXT);
-	NoText->Set_Clipping_Enabled(true);
 	NoText->Set_Clipping_Area(noTextRect);
 	NoText->Set_Color(255, 255, 255, 255);
 	NoText->Set_Font(HUD_FONT_SMALL_HEADER);
@@ -199,7 +195,6 @@ void EssentialsVoteStatusPlayerObserverClass::Create_Surface() {
 	TimeRectID = TimeBackground->Get_Element_ID();
 
 	HUDTextElementClass* TimeText = (HUDTextElementClass*)Surface->Create_Element(HUD_ELEMENT_TEXT);
-	TimeText->Set_Clipping_Enabled(true);
 	TimeText->Set_Clipping_Area(timeTextRect);
 	TimeText->Set_Color(255, 255, 255, 255);
 	TimeText->Set_Font(HUD_FONT_SMALL_HEADER);
@@ -244,7 +239,7 @@ void EssentialsVoteStatusPlayerObserverClass::Update_Data() {
 
 	if (HUDSurfaceClass* Surface = Find_HUD_Surface(SurfaceID)) {
 		RectClass bgRect(BOX_BG);
-		bgRect.Scale(Surface->Get_Boundary_Area());
+		bgRect.Scale(Vector2(Surface->Get_Boundary_Area().Width(), Surface->Get_Boundary_Area().Height()));
 		bgRect.Snap_To_Units(Vector2(1, 1));
 
 		HUDTextElementClass* Desc = (HUDTextElementClass*)Surface->Find_Element(DescriptionElementID);
