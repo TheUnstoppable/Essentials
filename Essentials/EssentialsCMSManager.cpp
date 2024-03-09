@@ -49,12 +49,16 @@ bool EssentialsCMSHandler::Chat_Event(cPlayer* Player, TextMessageEnum Type, con
 	if (EssentialsCMSManager::Is_Initialized()) {
 		auto Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::CHATPHRASEEXACT, Message);
 		if (Def) {
+#pragma warning(disable: 4127)
 			PERFORM_VIEW(Player, Def, View, true)
+#pragma warning(default: 4127)
 			return true;
 		}
 		Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::CHATPHRASEMATCH, Message);
 		if (Def) {
+#pragma warning(disable: 4127)
 			PERFORM_VIEW(Player, Def, View, true)
+#pragma warning(default: 4127)
 			return true;
 		}
 	}
@@ -65,7 +69,9 @@ bool EssentialsCMSHandler::Key_Hook_Event(cPlayer* Player, const StringClass& Ke
 	if (EssentialsCMSManager::Is_Initialized()) {
 		auto Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::KEYHOOK, Key);
 		if (Def) {
+#pragma warning(disable: 4127)
 			PERFORM_VIEW(Player, Def, View, true)
+#pragma warning(default: 4127)
 			return true;
 		}
 	}
@@ -76,7 +82,9 @@ void EssentialsCMSHandler::Player_Join_Event(cPlayer* Player) {
 	if (EssentialsCMSManager::Is_Initialized()) {
 		auto Def = EssentialsCMSManager::Find_CMS_With_Trigger(EssentialsCMSTrigger::PLAYERJOIN, "");
 		if (Def) {
+#pragma warning(disable: 4127)
 			PERFORM_VIEW(Player, Def, View, true)
+#pragma warning(default: 4127)
 		}
 	}
 }

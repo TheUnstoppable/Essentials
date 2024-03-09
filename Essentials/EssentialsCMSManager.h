@@ -20,7 +20,7 @@
 		Console_Output("[Essentials] Failed to perform CMS view \"%s\".\n", View->Get_Definition() ? View->Get_Definition()->Get_Name().Peek_Buffer() : "**Missing Definition**"); \
 		delete View; \
 	} else { \
-		if ((AutoDelete) && View->Auto_Delete_After_Perform()) delete View; \
+		if (!!(AutoDelete) || View->Auto_Delete_After_Perform()) delete View; \
 	}
 
 class ESSENTIALS_API EssentialsCMSHandler : public DAEventClass {
