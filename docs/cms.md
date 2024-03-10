@@ -11,7 +11,7 @@ CMS allows server owners to create chat and menu/popup dialog content that can b
 
 
 # How to use?
-Essentials CMS uses a custom text-based format named **ECMS** (stands for Essentials CMS) with `.cms` file extension, and allows creation of Chat content, Menu content and Popup content. Essentials ships with various CMS content for demonstration purposes.  
+Essentials CMS uses a custom text-based format named **ECMSL** (stands for Essentials CMS Language) with `.cms` file extension, and allows creation of Chat content, Menu content and Popup content. Essentials ships with various CMS content for demonstration purposes.  
 Each `.cms` file should start with a header that defines what the content is (Chat, Menu, Popup) and then following lines after the header are content and trigger types.
 <br /><br />
 
@@ -37,7 +37,7 @@ This content type allows displaying text and image content within a popup window
 
 
 # Format
-As it was said before, ECMS is a custom and simple text-based language.  
+As it was said before, ECMSL is a custom and simple text-based language.  
 Due to the nature of the parser, a new line (blank line) is required at the end of file to indicate that the script is over. Blank lines within the code will be evaluated as end of file and rest of the file won't be read.
 Before moving on into details, here's an example snippet that prints "Hello World!" as a host message when `!test` is written into the chat.
 ```
@@ -48,7 +48,7 @@ HostMessage Hello World!
 ```
 
 ## Types
-Here are the types that are recognized by ECMS.
+Here are the types that are recognized by ECMSL.
 <br /><br />
 
 ### Number
@@ -285,7 +285,7 @@ Below are the methods to activate CMS definitions.
 <br /><br />
 
 ## Examples
-Here are more examples of ECMS.
+Here are more examples of ECMSL.
 
 ```
 CMSChat ExampleChatModule
