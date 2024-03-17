@@ -102,7 +102,7 @@ Header can be one of these 3 values: `CMSChat`, `CMSMenuDialog` and `CMSPopupDia
 - **Close on Esc** (Boolean): Whether or not to close this dialog when Esc key is hit.
 
 **Description**: The header to define a menu dialog content.  
-**Example**: `CMSMenuDialog ExampleMenuDialogContent`
+**Example**: `CMSMenuDialog ExampleMenuDialogContent No`
 <br /><br />
 
 ### CMSPopupDialog
