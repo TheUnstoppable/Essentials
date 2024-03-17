@@ -124,7 +124,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### DialogText
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`  
 **Parameters**:
 - **Position** (Vector2): Position of this element on the screen.
 - **Size** (Vector2): Size of the element.
@@ -137,7 +137,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### DialogTitle
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`  
 **Parameters**:
 - **Position** (Vector2): Position of this element on the screen.
 - **Size** (Vector2): Size of the element.
@@ -150,7 +150,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### DialogImage
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`  
 **Parameters**:
 - **Position** (Vector2): Position of this element on the screen.
 - **Size** (Vector2): Size of the element.
@@ -161,7 +161,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### CloseBorderedButton
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`  
 **Parameters**:
 - **Position** (Vector2): Position of this element on the screen.
 - **Size** (Vector2): Size of the element.
@@ -172,7 +172,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### CloseTitleButton
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`  
 **Parameters**:
 - **Position** (Vector2): Position of this element on the screen.
 - **Size** (Vector2): Size of the element.
@@ -183,7 +183,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### CloseImageButton
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`  
 **Parameters**:
 - **Position** (Vector2): Position of this element on the screen.
 - **Size** (Vector2): Size of the element.
@@ -241,7 +241,7 @@ Below are the tags to define the content elements.
 <br /><br />
 
 ### Sound
-**Applicable Types:** `CMSMenuDialog`, `CMSChatDialog`, `CMSChat`  
+**Applicable Types:** `CMSMenuDialog`, `CMSPopupDialog`, `CMSChat`  
 **Parameters**:
 - **Data** (Text): The sound to play.
 
