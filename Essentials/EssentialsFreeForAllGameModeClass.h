@@ -20,8 +20,8 @@ public:
 	virtual void Init();
 	virtual void Game_Over_Event();
 	virtual void Player_Join_Event(cPlayer* Player);
-	virtual int Character_Purchase_Request_Event(BaseControllerClass* Base, cPlayer* Player, float& Cost, const SoldierGameObjDef* Item) { return 4; }
-	virtual int Vehicle_Purchase_Request_Event(BaseControllerClass* Base, cPlayer* Player, float& Cost, const VehicleGameObjDef* Item) { return 4; }
+	virtual PurchaseStatus Character_Purchase_Request_Event(BaseControllerClass* Base, cPlayer* Player, float& Cost, const SoldierGameObjDef* Item) { return PurchaseStatus_OutOfStock; }
+	virtual PurchaseStatus Vehicle_Purchase_Request_Event(BaseControllerClass* Base, cPlayer* Player, float& Cost, const VehicleGameObjDef* Item) { return PurchaseStatus_OutOfStock; }
 	virtual void Object_Created_Event(GameObject* obj);
 
 private:
