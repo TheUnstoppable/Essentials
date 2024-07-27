@@ -1,6 +1,7 @@
 # Essentials
 [![Jenkins Build](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.unstoppable.work%2Fjob%2FDragonade%2520Plugins%2Fjob%2FAreaSaver%2F)](https://ci.unstoppable.work/job/Dragonade%20Plugins/job/Essentials/)
 [![Discord](https://img.shields.io/discord/647431164138749966?label=support)](https://discord.gg/KjeQ7xv)
+[![Buy me a Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-yellow)](https://buymeacoffee.com/theunstoppable)
 
 ## Overview
 Essentials is a package of must-have features for all C&C Renegade servers running Dragonade. Essentials aims to extend features and API of Dragonade without modifying it's code.
